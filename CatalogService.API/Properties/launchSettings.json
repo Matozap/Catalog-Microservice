@@ -1,0 +1,44 @@
+{
+  "iisSettings": {
+    "windowsAuthentication": false,
+    "anonymousAuthentication": true,
+    "iisExpress": {
+      "applicationUrl": "http://localhost:58509",
+      "sslPort": 44347
+    }
+  },
+  "$schema": "http://json.schemastore.org/launchsettings.json",
+  "profiles": {
+    "IIS Express": {
+      "commandName": "IISExpress",
+      "launchBrowser": true,
+      "launchUrl": "swagger",
+      "environmentVariables": {
+        "SERVICE_NAME": "CatalogService",
+        "ENDPOINT_NAME": "CatalogService.API",
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    },
+    "CatalogService.API": {
+      "commandName": "Project",
+      "launchBrowser": false,
+      "launchUrl": "swagger",
+      "environmentVariables": {
+        "SERVICE_NAME": "CatalogService",
+        "ENDPOINT_NAME": "CatalogService.API",
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }      
+    },
+    "Docker": {
+      "commandName": "Docker",
+      "launchBrowser": true,
+      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}/swagger",
+      "environmentVariables": {
+        "SERVICE_NAME": "CatalogService",
+        "ENDPOINT_NAME": "CatalogService.API"
+      },
+      "publishAllPorts": true,
+      "useSSL": true
+    }
+  }
+}

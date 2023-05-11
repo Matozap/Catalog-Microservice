@@ -1,0 +1,102 @@
+version: "3.9"
+name: "catalog-service"
+
+# This docker-compose file will create and run the application and all external systems
+# Service List:
+#
+# - Microservice (.NET Application from dockerfile)
+# - Redis (Cache)
+# - Sql server (Database)
+# - MySQL (Database)
+# - Postgres (Database)
+# - RabbitMQ (Event bus)
+#
+# --------------------------
+# Usage
+# Start: docker compose -f docker-compose.yml up -d
+# Stop: docker compose -f docker-compose.yml down -v
+# Clean: docker rmi image:tag (I.E. docker rmi catalog.service:1.0)
+
+volumes:
+  local_catalog_code: {}
+  local_redis_data: {}
+  local_sqlserver_data: {}
+  local_mysql_data: {}
+  local_postgres_data: {}
+  local_rabbitmq_data: {}
+  
+services:
+  catalog.service:
+    image: "catalog.service:1.0"
+    container_name: "catalog.api"
+    build: .
+    ports:
+      - "8010:5000"
+      - "8011:5001"
+    volumes:
+      - "local_catalog_code:/code"
+    environment:
+      DELAYED_START: 20000
+    restart: "on-failure"
+    depends_on:
+      - "redis"
+      - "sqlserver"
+      - "mysql"
+      - "postgres"
+  
+  redis:
+    container_name: "catalog.redis"
+    hostname: "catalog.redis"
+    image: "redis"
+    ports:
+      - "8012:6379"
+    volumes:
+      - "local_redis_data:/data"
+  
+  sqlserver:
+    container_name: "catalog.mssql"
+    hostname: "catalog.mssql"
+    image: "mcr.microsoft.com/mssql/server:2022-latest"
+    ports:
+      - "8013:1433"
+    volumes:
+      - "local_sqlserver_data:/data"
+    environment:
+      MSSQL_SA_PASSWORD: "Password.1"
+      ACCEPT_EULA: "Y"
+  
+  mysql:
+    container_name: "catalog.mysql"
+    image: "mysql"
+    command: "--default-authentication-plugin=mysql_native_password"
+    ports:
+      - "8014:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: "root"
+      MYSQL_DATABASE: "data"
+      MYSQL_USER: "sa"
+      MYSQL_PASSWORD: "Password.1"
+    volumes:
+      - "local_mysql_data:/var/lib/mysql"
+        
+  postgres:
+    container_name: "catalog.postgres"
+    image: "postgres"
+    ports:
+      - "8015:5432"
+    environment:
+      POSTGRES_USER: "sa"
+      POSTGRES_PASSWORD: "Password.1"
+      POSTGRES_DB: "data"
+    volumes:
+      - "local_postgres_data:/var/lib/postgres"
+        
+  rabbitmq:
+    container_name: "catalog.rabbitmq"
+    hostname: "catalog.rabbitmq"
+    image: "rabbitmq:3.11-management-alpine"
+    ports:
+      - "8016:5672"
+      - "8016:15672"
+    volumes:
+      - "local_rabbitmq_data:/var/lib/rabbitmq"

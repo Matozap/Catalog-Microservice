@@ -1,0 +1,81 @@
+version: "3.9"
+name: "external-services"
+
+# This docker-compose file will load all external systems but not the application itself
+# Service List:
+# 
+# - Redis (Cache)
+# - Sql server (Database)
+# - MySQL (Database)
+# - Postgres (Database)
+# - RabbitMQ (Event bus)
+#
+# --------------------------
+# Usage
+# Start: docker compose -f docker-compose.all-external-systems.yml up -d
+# Stop: docker compose -f docker-compose.all-external-systems.yml down -v
+
+volumes:
+  local_redis_data: {}
+  local_sqlserver_data: {}
+  local_mysql_data: {}
+  local_postgres_data: {}
+  local_rabbitmq_data: {}
+  
+services:
+  redis:
+    container_name: "catalog.redis"
+    hostname: "catalog.redis"
+    image: "redis"
+    ports:
+      - "7002:6379"
+    volumes:
+      - "local_redis_data:/data"
+  
+  sqlserver:
+    container_name: "catalog.mssql"
+    hostname: "catalog.mssql"
+    image: "mcr.microsoft.com/mssql/server:2022-latest"
+    ports:
+      - "7003:1433"
+    volumes:
+      - "local_sqlserver_data:/data"
+    environment:
+      MSSQL_SA_PASSWORD: "Password.1"
+      ACCEPT_EULA: "Y"
+  
+  mysql:
+    container_name: "catalog.mysql"
+    image: "mysql"
+    command: "--default-authentication-plugin=mysql_native_password"
+    ports:
+      - "7004:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: "root"
+      MYSQL_DATABASE: "data"
+      MYSQL_USER: "sa"
+      MYSQL_PASSWORD: "Password.1"
+    volumes:
+      - "local_mysql_data:/var/lib/mysql"
+        
+  postgres:
+    container_name: "catalog.postgres"
+    image: "postgres"
+    ports:
+      - "7005:5432"
+    environment:
+      POSTGRES_USER: "sa"
+      POSTGRES_PASSWORD: "Password.1"
+      POSTGRES_DB: "data"
+    volumes:
+      - "local_postgres_data:/var/lib/postgres"
+        
+  rabbitmq:
+    container_name: "catalog.rabbitmq"
+    hostname: "catalog.rabbitmq"
+    image: "rabbitmq:3.11-management-alpine"
+    ports:
+      - "7006:5672"
+      - "7007:15672"
+    volumes:
+      - "local_rabbitmq_data:/var/lib/rabbitmq"
