@@ -34,7 +34,7 @@ public class UpdateProductHandler : IRequestHandler<UpdateProduct, ProductData>
 
     private async Task<ProductData> UpdateProduct(ProductData productData)
     {
-        var entity = await _repository.GetAsSingleAsync<Product, string>(e => e.Id == productData.Id || e.Code == productData.Code);
+        var entity = await _repository.GetAsSingleAsync<Product, string>(e => e.Id == productData.Id || e.Sku == productData.Sku);
         if (entity == null) return null;
         
         var changes = productData.Adapt(entity);

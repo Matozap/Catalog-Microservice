@@ -14,6 +14,7 @@ using DistributedCache.Core.Configuration;
 using CatalogService.API.Inputs.Grpc;
 using CatalogService.Application;
 using CatalogService.Infrastructure;
+using CatalogService.Message.Events.ProductCategories.v1;
 using CatalogService.Message.Events.ProductImages.v1;
 using CatalogService.Message.Events.Products.v1;
 using CatalogService.Message.Events.ProductStock.v1;
@@ -99,6 +100,7 @@ public static class StartupServicesExtension
                     .SetRetryIntervals(TimeSpan.FromMinutes(2), TimeSpan.FromMinutes(5), TimeSpan.FromMinutes(10))
                     .UseDeadLetterQueue(true)
                     .DisableBus(busSettings.Disabled)
+                    .MapTopic("catalog/product-category-event", typeof(ProductCategoryEvent), typeof(ProductCategoryEventConsumer), "self.product.category.catalog.sub")
                     .MapTopic("catalog/product-event", typeof(ProductEvent), typeof(ProductEventConsumer), "self.product.catalog.sub")
                     .MapTopic("catalog/product-image-event", typeof(ProductImageEvent), typeof(ProductImageEventConsumer), "self.product.image.catalog.sub")
                     .MapTopic("catalog/product-stock-event", typeof(ProductStockEvent), typeof(ProductStockEventConsumer), "self.product.stock.catalog.sub");
@@ -124,6 +126,7 @@ public static class StartupServicesExtension
         app.MapGrpcService<ProductStockService>();
         app.MapGrpcService<ProductImageService>();
         app.MapGrpcService<ProductService>();
+        app.MapGrpcService<ProductCategoryService>();
         
         if(ConfigurationHelper.GrpcSettings(configuration).ReflectionDisabled) return;
         app.MapCodeFirstGrpcReflectionService();

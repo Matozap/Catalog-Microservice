@@ -25,6 +25,7 @@ public sealed class DatabaseContext : DbContext
     public DbSet<Product> Products { get; set; }
     public DbSet<ProductImage> ProductImages { get; set; }
     public DbSet<ProductStock> ProductStock { get; set; }
+    public DbSet<ProductCategory> ProductCategories { get; set; }
     public DbSet<Outbox> EventBusOutboxes { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -38,6 +39,7 @@ public sealed class DatabaseContext : DbContext
         CreateProductImageModel(modelBuilder);
         CreateProductStockModel(modelBuilder);
         CreateEventBusOutboxModel(modelBuilder);
+        CreateProductCategoryModel(modelBuilder);
     }
     
     private static void CreateProductModel(ModelBuilder modelBuilder)
@@ -47,10 +49,10 @@ public sealed class DatabaseContext : DbContext
         {
             entity.HasKey(e => e.Id);
             entity.Property(e => e.Id).ToJsonProperty("id").IsRequired();
-            entity.Property(e => e.Code).IsRequired();
-            entity.HasIndex(e => e.Code);
+            entity.Property(e => e.Sku).IsRequired();
+            entity.HasIndex(e => e.Sku);
             entity.Property(e => e.Name).IsRequired();
-            entity.HasIndex(e => e.Code);
+            entity.HasIndex(e => e.Sku);
             entity.HasMany(c => c.ProductImages);
             entity.HasNoDiscriminator();
             entity.HasPartitionKey(e => e.Id);
@@ -86,7 +88,23 @@ public sealed class DatabaseContext : DbContext
             entity.HasIndex(e => e.Name);
             entity.HasOne(productStock => productStock.ProductImage).WithMany(productImage => productImage.ProductStock);
             entity.HasNoDiscriminator();
-            entity.HasPartitionKey(e => e.ProductImageId);
+            entity.HasPartitionKey(e => e.Id);
+            entity.HasManualThroughput(10000);
+        });
+    }
+    
+    private static void CreateProductCategoryModel(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<ProductCategory>().ToContainer("ProductCategory");
+        modelBuilder.Entity<ProductCategory>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Id).ToJsonProperty("id").IsRequired();
+            entity.Property(e => e.Name).IsRequired();
+            entity.HasIndex(e => e.Name);
+            entity.HasMany(s => s.Products).WithOne(c => c.ProductCategory);
+            entity.HasNoDiscriminator();
+            entity.HasPartitionKey(e => e.Id);
             entity.HasManualThroughput(10000);
         });
     }

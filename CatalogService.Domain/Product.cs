@@ -4,12 +4,15 @@ namespace CatalogService.Domain;
 
 public class Product : EntityBase
 {
-    public string Code { get; set; }
+    public string Sku { get; set; }
     public string Name { get; set; }
-    public string Currency { get; set; }
-    public string CurrencyName { get; set; }
-    public string Region { get; set; }
-    public string SubRegion { get; set; }
+    public string Description { get; set; }
+    public decimal Price { get; set; }
+    public string ProductCategoryId { get; set; }
+    public string Brand { get; set; }
+    public string Dimensions { get; set; }
+    public decimal Weight { get; set; }
     public bool Disabled { get; set; }
+    public virtual ProductCategory ProductCategory { get; set; }
     public virtual List<ProductImage> ProductImages { get; set; }
 }

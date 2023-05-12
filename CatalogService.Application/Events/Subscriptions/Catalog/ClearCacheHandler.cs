@@ -1,6 +1,7 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
+using CatalogService.Application.Handlers.ProductCategories.v1.Queries;
 using DistributedCache.Core;
 using CatalogService.Application.Handlers.ProductStock.v1.Queries;
 using CatalogService.Application.Handlers.Products.v1.Queries;
@@ -31,6 +32,16 @@ public class ClearCacheHandler : IRequestHandler<ClearCache, bool>
         }
         else
         {
+            if (!string.IsNullOrEmpty(request.ProductCategoryId))
+            {
+                const string message = "Clearing catalog by product category cache";
+                _logger.LogDebug(message);
+                var cacheKey = GetProductCategoryByIdHandler.GetCacheKey(request.ProductId);
+                await _cache.RemoveValueAsync(cacheKey, cancellationToken);
+                
+                cacheKey = GetAllProductCategoriesHandler.GetCacheKey();
+                await _cache.RemoveValueAsync(cacheKey, cancellationToken);
+            }
             
             if (!string.IsNullOrEmpty(request.ProductId))
             {

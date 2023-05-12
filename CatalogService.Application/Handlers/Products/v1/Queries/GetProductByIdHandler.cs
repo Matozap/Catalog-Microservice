@@ -49,7 +49,7 @@ public class GetProductByIdHandler : IRequestHandler<GetProductById, ProductData
 
     private async Task<ProductData> GetProductById(string id)
     {
-        var entity = await _repository.GetAsSingleAsync<Product, string>(predicate: e => e.Id == id || e.Code == id,
+        var entity = await _repository.GetAsSingleAsync<Product, string>(predicate: e => e.Id == id || e.Sku == id,
         includeNavigationalProperties: true);
         var resultDto = entity.Adapt<Product, ProductData>();
         return resultDto;

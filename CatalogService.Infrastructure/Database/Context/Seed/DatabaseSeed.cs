@@ -14,7 +14,7 @@ public static class DatabaseSeed
 {
     private record SeedProductStock(string Name);
     private record SeedProductImage(string Code, string Name, SeedProductStock[] ProductStock);
-    private record SeedProduct(string Code, string Name, string Currency, string CurrencyName, string Region, string SubRegion, SeedProductImage[] ProductImages);
+    private record SeedProduct(string Code, string Name, string Description, decimal Price, string Category, string Brand,string Dimensions, decimal Weight, SeedProductImage[] ProductImages);
 
     public static async Task SeedAllProductsDataAsync(DatabaseContext context)
     {
@@ -37,12 +37,14 @@ public static class DatabaseSeed
                     var newProduct = new Product
                     {
                         Id = UniqueIdGenerator.GenerateSequentialId(),
-                        Code = product.Code,
+                        Sku = product.Code,
                         Name = product.Name,
-                        Currency = product.Currency,
-                        CurrencyName = product.CurrencyName,
-                        Region = product.Region,
-                        SubRegion = product.SubRegion,
+                        Description = product.Description,
+                        Price = product.Price,
+                        ProductCategoryId = product.Category,
+                        Brand = product.Brand,
+                        Dimensions = product.Dimensions,
+                        Weight = product.Weight,
                         LastUpdateDate = DateTime.UtcNow,
                         LastUpdateUserId = "System",
                         Disabled = false
@@ -63,10 +65,10 @@ public static class DatabaseSeed
                         };
                         productImages.Add(newProductImage);
 
-                        productStock.AddRange(productImage.ProductStock.Select(productStock => new ProductStock
+                        productStock.AddRange(productImage.ProductStock.Select(productStocks => new ProductStock
                         {
                             Id = UniqueIdGenerator.GenerateSequentialId(),
-                            Name = productStock.Name,
+                            Name = productStocks.Name,
                             ProductImageId = newProductImage.Id,
                             LastUpdateDate = DateTime.UtcNow,
                             LastUpdateUserId = "System",

@@ -53,47 +53,17 @@ public class GetAllProductsHandler : IRequestHandler<GetAllProducts, List<Produc
              selectExpression: product => new Product
                 {
                     Id = product.Id,
-                    Code = product.Code,
+                    Sku = product.Sku,
                     Name = product.Name,
-                    Currency = product.Currency,
-                    CurrencyName = product.CurrencyName,
-                    Region = product.Region,
-                    SubRegion = product.SubRegion
+                    Description = product.Description,
+                    Price = product.Price,
+                    ProductCategoryId = product.ProductCategoryId,
+                    Brand = product.Brand,
+                    Dimensions = product.Dimensions,
+                    Weight = product.Weight
                 });
         return entities.Adapt<List<ProductData>>();
     }
     
     public static string GetCacheKey() => "Products:All";
-}
-
-public class ProductManager
-{
-    private readonly ICache _cache;
-
-    public ProductManager(ICache cache)
-    {
-        _cache = cache;
-    }
-
-    // public async Task<List<ProductData>> GetAllProductsAsync(CancellationToken cancellationToken)
-    // {
-    //     var cacheKey = "some cache key";
-    //
-    //     var cachedValue = await _cache.GetCacheValueAsync<List<ProductData>>(cacheKey, cancellationToken);
-    //     if (cachedValue != null)
-    //     {
-    //         return cachedValue;
-    //     }
-    //
-    //     var dataValue = await GetAllProductsFromRepositoryAsync();
-    //
-    //     var ttl = new DistributedCacheEntryOptions
-    //     {
-    //         AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(60),
-    //         SlidingExpiration = TimeSpan.FromSeconds(30)
-    //     };
-    //     _ = _cache.SetCacheValueAsync(cacheKey, dataValue, ttl, cancellationToken);
-    //
-    //     return dataValue;
-    // }
 }

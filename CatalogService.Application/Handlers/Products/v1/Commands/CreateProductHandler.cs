@@ -35,7 +35,7 @@ public class CreateProductHandler : IRequestHandler<CreateProduct, ProductData>
 
     private async Task<Product> CreateProduct(ProductData product)
     {
-        if (await _repository.GetAsSingleAsync<Product,string>(e => e.Code == product.Code || e.Name == product.Name) != null)
+        if (await _repository.GetAsSingleAsync<Product,string>(e => e.Sku == product.Sku || e.Name == product.Name) != null)
         {
             return null;
         }

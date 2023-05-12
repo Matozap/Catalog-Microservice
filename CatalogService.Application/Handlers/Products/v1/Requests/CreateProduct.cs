@@ -17,8 +17,8 @@ public class CreateProductValidator : AbstractValidator<CreateProduct>
         RuleFor(x => x.Details.Name)
             .NotNull().NotEmpty().WithMessage("Name is required")
             .MaximumLength(200).WithMessage("Name cannot exceed 200 characters");
-        RuleFor(x => x.Details.Code)
-            .NotNull().NotEmpty().WithMessage("Code is required")
-            .MaximumLength(36).WithMessage("Code cannot exceed 36 characters");
+        RuleFor(x => x.Details.Sku)
+            .NotNull().NotEmpty().WithMessage("Sku is required")
+            .MaximumLength(36).WithMessage("Sku cannot exceed 36 characters");
     }
 }

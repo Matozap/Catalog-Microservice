@@ -32,7 +32,7 @@ public class DeleteProductHandler : IRequestHandler<DeleteProduct, string>
 
     private async Task<Product> DeleteProductAsync(string id)
     {
-        var entity = await _repository.GetAsSingleAsync<Product, string>(c => c.Id == id || c.Code == id);
+        var entity = await _repository.GetAsSingleAsync<Product, string>(c => c.Id == id || c.Sku == id);
             
         if(entity != null)
         {                

@@ -4,6 +4,7 @@ namespace CatalogService.Message.Events.Cache;
 
 public class ClearCache : IRequest<bool>
 {
+    public string ProductCategoryId { get; init; }
     public string ProductId { get; init; }
     public string ProductImageId { get; init; }
     public string ProductImageCode { get; init; }
