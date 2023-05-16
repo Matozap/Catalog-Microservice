@@ -45,9 +45,9 @@ public class GetAllProductImagesHandler : IRequestHandler<GetAllProductImages, o
 
     private async Task<List<ProductImageData>> GetAllProductImages(string productId)
     {
-        var parentByCode = await _repository.GetAsSingleAsync<Product, string>(predicate: e => e.Sku == productId) ?? new Product();
+        var parentByCode = await _repository.GetAsSingleAsync<Product, string>(predicate: e => e.Id == productId) ?? new Product();
         var entities = await _repository.GetAsListAsync<ProductImage, string>(
-            predicate: productImage => (productImage.ProductId == productId || productImage.ProductId == parentByCode.Id) && !productImage.Disabled,
+            predicate: productImage => (productImage.ProductId == productId || productImage.ProductId == parentByCode.Sku) && !productImage.Disabled,
             orderAscending: productImage => productImage.Url,
             includeNavigationalProperties: true
         );

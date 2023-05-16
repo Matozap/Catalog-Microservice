@@ -34,7 +34,7 @@ public class GetProductStockByIdHandler : IRequestHandler<GetProductStockById, P
             return cachedValue;
         }
 
-        var dataValue = await GetProductImageById(request.Id);
+        var dataValue = await GetProductStockById(request.Id);
 
         if(dataValue != null)
         {
@@ -44,10 +44,10 @@ public class GetProductStockByIdHandler : IRequestHandler<GetProductStockById, P
         return dataValue;
     }
 
-    private async Task<ProductStockData> GetProductImageById(string id)
+    private async Task<ProductStockData> GetProductStockById(string id)
     {
         var entity = await _repository.GetAsSingleAsync<Domain.ProductStock, string>(
-            predicate: productStock => productStock.Id == id && !productStock.Disabled,
+            predicate: productStock => productStock.Id == id,
             orderDescending: productStock => productStock.Id,
             includeNavigationalProperties: true);
         var resultDto = entity.Adapt<Domain.ProductStock, ProductStockData>();

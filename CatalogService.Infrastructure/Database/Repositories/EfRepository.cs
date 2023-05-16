@@ -111,7 +111,7 @@ public class EfRepository : IRepository
             result = result.OrderBy(orderDescending);
         }
         
-        if (orderDescending != null)
+        if (selectExpression != null)
         {
             result = result.Select(selectExpression);
         }
@@ -152,7 +152,7 @@ public class EfRepository : IRepository
             default:
                 return source
                     .Include(category => category.Products).ThenInclude(product => product.ProductImages.Where(productImage => !productImage.Disabled).OrderBy(productImage => productImage.Title))
-                    .Include(category => category.Products).ThenInclude(s => s.ProductStocks.Where(productStock => !productStock.Disabled).OrderBy(productStock => productStock.ProductId))
+                    .Include(category => category.Products).ThenInclude(s => s.ProductStocks.OrderBy(productStock => productStock.ProductId))
                     .AsSplitQuery()
                     .AsNoTracking()
                     .ToList();
@@ -182,7 +182,7 @@ public class EfRepository : IRepository
             case EngineType.Relational:
             default:
                 return source.Include(product => product.ProductImages.Where(productImage => !productImage.Disabled).OrderBy(productImage => productImage.Title))
-                    .Include(s => s.ProductStocks.Where(productStock => !productStock.Disabled).OrderBy(productStock => productStock.ProductId))
+                    .Include(s => s.ProductStocks.OrderBy(productStock => productStock.ProductId))
                     .AsSplitQuery()
                     .AsNoTracking()
                     .ToList();

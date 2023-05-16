@@ -43,11 +43,11 @@ public class GetAllProductStockHandler : IRequestHandler<GetAllProductStock, Lis
         return dataValue;
     }
 
-    private async Task<List<ProductStockData>> GetAllProductStock(string productImageId)
+    private async Task<List<ProductStockData>> GetAllProductStock(string productId)
     {
-        var parentByCode = await _repository.GetAsSingleAsync<ProductImage,string>(productStockItem => productStockItem.Id == productImageId || productStockItem.Title == productImageId) ?? new ProductImage();
+        var parentByCode = await _repository.GetAsSingleAsync<Product,string>(productStockItem => productStockItem.Id == productId || productStockItem.Sku == productId) ?? new Product();
         var entities = await _repository.GetAsListAsync<Domain.ProductStock,string>(
-            predicate: productStock => (productStock.ProductId == productImageId || productStock.ProductId == parentByCode.Id) && !productStock.Disabled,
+            predicate: productStock => productStock.ProductId == productId || productStock.ProductId == parentByCode.Id,
             orderDescending: productStock => productStock.Id,
             includeNavigationalProperties: true);
         

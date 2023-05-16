@@ -82,12 +82,6 @@ public static class ProductStockMockBuilder
                 GenerateMockRepository(catalog));
         }
         
-        if (typeof(T) == typeof(SoftDeleteProductStockHandler))
-        {
-            return new SoftDeleteProductStockHandler(NullLogger<SoftDeleteProductStockHandler>.Instance,
-                GenerateMockRepository(catalog));
-        }
-        
         if (typeof(T) == typeof(DeleteProductStockHandler))
         {
             return new DeleteProductStockHandler(NullLogger<DeleteProductStockHandler>.Instance,

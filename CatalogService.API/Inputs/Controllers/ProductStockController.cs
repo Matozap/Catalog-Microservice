@@ -26,8 +26,8 @@ public class ProductStockController
     /// <returns>All ProductStock</returns>
     /// <response code="200">OK</response>
     /// <response code="500">Internal Server error</response>
-    [HttpGet("productStock/{productImageId}")]
-    public async Task<IActionResult> GetAll(string productImageId) => await _productStockOutput.GetAllAsync<ActionResult>(productImageId);
+    [HttpGet("productStocks/{productId}")]
+    public async Task<IActionResult> GetAll(string productId) => await _productStockOutput.GetAllAsync<ActionResult>(productId);
 
     /// <summary>
     /// Gets a productStock by id (number or string).
