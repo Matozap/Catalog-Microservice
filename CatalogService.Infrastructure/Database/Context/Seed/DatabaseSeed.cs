@@ -56,8 +56,8 @@ public static class DatabaseSeed
                         var newProductImage = new ProductImage
                         {
                             Id = UniqueIdGenerator.GenerateSequentialId(),
-                            Code = productImage.Code,
-                            Name = productImage.Name,
+                            Title = productImage.Code,
+                            Url = productImage.Name,
                             ProductId = newProduct.Id,
                             LastUpdateDate = DateTime.UtcNow,
                             LastUpdateUserId = "System",
@@ -68,8 +68,8 @@ public static class DatabaseSeed
                         productStock.AddRange(productImage.ProductStock.Select(productStocks => new ProductStock
                         {
                             Id = UniqueIdGenerator.GenerateSequentialId(),
-                            Name = productStocks.Name,
-                            ProductImageId = newProductImage.Id,
+                            Current = 0,
+                            ProductId = newProductImage.Id,
                             LastUpdateDate = DateTime.UtcNow,
                             LastUpdateUserId = "System",
                             Disabled = false

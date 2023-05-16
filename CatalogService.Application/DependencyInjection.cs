@@ -27,7 +27,6 @@ public static class DependencyInjection
             .IgnoreNullValues(true);
         TypeAdapterConfig<ProductImage, ProductImageData>
             .NewConfig()
-            .Map(dest => dest.ProductStock, src => MapToProductStockData(src))
             .IgnoreNullValues(true);
         TypeAdapterConfig<ProductImageData, ProductImage>
             .NewConfig()
@@ -38,7 +37,6 @@ public static class DependencyInjection
             .IgnoreNullValues(true);
         TypeAdapterConfig<ProductStockData, ProductStock>
             .NewConfig()
-            .Map(dest => dest.ProductImage, src => (ProductImage)null)
             .IgnoreNullValues(true);
 
         services.AddValidatorsFromAssembly(typeof(DependencyInjection).Assembly);
@@ -52,20 +50,9 @@ public static class DependencyInjection
         return src.ProductImages.Select(productImage => new ProductImageData
         {
             Id = productImage.Id,
-            Code = productImage.Code,
-            Name = productImage.Name,
-            ProductId = productImage.ProductId,
-            ProductStock =  MapToProductStockData(productImage).ToList()
-        });
-    }
-
-    private static IEnumerable<ProductStockData> MapToProductStockData(ProductImage src)
-    {
-        return src.ProductStock.Select(productStock => new ProductStockData
-        {
-            Id = productStock.Id,
-            Name = productStock.Name,
-            ProductImageId = productStock.ProductImageId
+            Title = productImage.Title,
+            Url = productImage.Url,
+            ProductId = productImage.ProductId
         });
     }
 

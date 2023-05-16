@@ -18,7 +18,8 @@ public class UpdateProductStockTests
     {
         var classToHandle = new UpdateProductStock
         {
-            Details = ProductStockMockBuilder.GenerateMockProductStockDtoList(1).FirstOrDefault()
+            Id = "1",
+            Value = 10
         };
 
         var handler = (UpdateProductStockHandler)ProductStockMockBuilder.CreateHandler<UpdateProductStockHandler>();
@@ -32,7 +33,8 @@ public class UpdateProductStockTests
     {
         var classToHandle = new UpdateProductStock
         {
-            Details = new ProductStockData()
+            Id = "1",
+            Value = 10
         };
 
         var handler = (UpdateProductStockHandler)ProductStockMockBuilder.CreateHandler<UpdateProductStockHandler>();

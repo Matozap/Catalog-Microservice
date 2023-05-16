@@ -24,7 +24,7 @@ public class CreateProductImageHandler : IRequestHandler<CreateProductImage, Pro
 
     public async Task<ProductImageData> Handle(CreateProductImage request, CancellationToken cancellationToken)
     {
-        ArgumentException.ThrowIfNullOrEmpty(request.Details?.Name);
+        ArgumentException.ThrowIfNullOrEmpty(request.Details?.Url);
         
         var resultEntity = await CreateProductImage(request.Details);
         if (resultEntity == null) return null;
@@ -37,7 +37,7 @@ public class CreateProductImageHandler : IRequestHandler<CreateProductImage, Pro
 
     private async Task<ProductImage> CreateProductImage(ProductImageData productImage)
     {
-        if (await _repository.GetAsSingleAsync<ProductImage, string>(e => e.Code == productImage.Code && e.ProductId == productImage.ProductId) != null)
+        if (await _repository.GetAsSingleAsync<ProductImage, string>(e => e.Title == productImage.Title && e.ProductId == productImage.ProductId) != null)
         {
             return null;
         }

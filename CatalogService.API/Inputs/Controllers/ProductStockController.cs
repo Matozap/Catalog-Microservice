@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using CatalogService.API.Outputs;
 using CatalogService.API.Outputs.Base;
+using CatalogService.Application.Handlers.ProductStock.v1.Requests;
 using CatalogService.Message.Contracts.ProductStock.v1;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -58,7 +59,7 @@ public class ProductStockController
     /// <response code="200">OK</response>
     /// <response code="500">Internal Server error</response>
     [HttpPut("productStock")]
-    public async Task<IActionResult> Update([FromBody] ProductStockData data) => await _productStockOutput.UpdateAsync<ActionResult>(data);
+    public async Task<IActionResult> Update([FromBody] UpdateProductStock data) => await _productStockOutput.UpdateAsync<ActionResult>(data);
 
     /// <summary>
     /// Does a soft delete on the productStock with the given id.

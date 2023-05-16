@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using DistributedCache.Core;
 using CatalogService.Application.Handlers.ProductStock.v1.Requests;
 using CatalogService.Application.Interfaces;
-using CatalogService.Domain;
 using CatalogService.Message.Contracts.ProductStock.v1;
 using Mapster;
 using MediatR;
@@ -49,7 +48,7 @@ public class GetProductStockByIdHandler : IRequestHandler<GetProductStockById, P
     {
         var entity = await _repository.GetAsSingleAsync<Domain.ProductStock, string>(
             predicate: productStock => productStock.Id == id && !productStock.Disabled,
-            orderAscending: productStock => productStock.Name,
+            orderDescending: productStock => productStock.Id,
             includeNavigationalProperties: true);
         var resultDto = entity.Adapt<Domain.ProductStock, ProductStockData>();
         return resultDto;

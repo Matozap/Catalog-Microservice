@@ -15,4 +15,5 @@ public class Product : EntityBase
     public bool Disabled { get; set; }
     public virtual ProductCategory ProductCategory { get; set; }
     public virtual List<ProductImage> ProductImages { get; set; }
+    public virtual List<ProductStock> ProductStocks { get; set; }
 }

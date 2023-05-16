@@ -1,14 +1,18 @@
-using ProtoBuf;
+using System.Runtime.Serialization;
 
 namespace CatalogService.Message.Contracts.ProductStock.v1;
 
-[ProtoContract]
+[DataContract]
 public class ProductStockData
 {
-    [ProtoMember(1, DataFormat = DataFormat.WellKnown)]
+    [DataMember(Order = 1)]
     public string Id { get; set; }
-    [ProtoMember(2, DataFormat = DataFormat.WellKnown)]
-    public string Name { get; set; }
-    [ProtoMember(3, DataFormat = DataFormat.WellKnown)]
-    public string ProductImageId { get; set; }
+    [DataMember(Order = 2)]
+    public decimal Current { get; set; }
+    [DataMember(Order = 3)]
+    public decimal Booked { get; set; }
+    [DataMember(Order = 4)]
+    public decimal Previous { get; set; }
+    [DataMember(Order = 5)]
+    public string ProductId { get; set; }
 }

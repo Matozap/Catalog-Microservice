@@ -35,7 +35,7 @@ public class ProductStockEventConsumer : IConsumer<ProductStockEvent>
                     _ = _mediator.Send(new ClearCache
                     {
                         ProductStockId = catalogEvent.Details.Id,
-                        ProductImageId = catalogEvent.Details.ProductImageId
+                        ProductImageId = catalogEvent.Details.ProductId
                     });
                     break;
 

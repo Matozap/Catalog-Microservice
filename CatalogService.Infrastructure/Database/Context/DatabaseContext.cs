@@ -66,11 +66,11 @@ public sealed class DatabaseContext : DbContext
         {
             entity.HasKey(e => e.Id);
             entity.Property(e => e.Id).ToJsonProperty("id").IsRequired();
-            entity.Property(e => e.Code).IsRequired();
-            entity.HasIndex(e => e.Code);
-            entity.Property(e => e.Name).IsRequired();
-            entity.HasIndex(e => e.Name);
-            entity.HasMany(s => s.ProductStock).WithOne(c => c.ProductImage);
+            entity.Property(e => e.Title).IsRequired();
+            entity.HasIndex(e => e.Title);
+            entity.Property(e => e.Url).IsRequired();
+            entity.HasIndex(e => e.Url);
+            entity.HasOne(e => e.Product).WithMany(product => product.ProductImages);
             entity.HasNoDiscriminator();
             entity.HasPartitionKey(e => e.ProductId);
             entity.HasManualThroughput(10000);
@@ -84,9 +84,9 @@ public sealed class DatabaseContext : DbContext
         {
             entity.HasKey(e => e.Id);
             entity.Property(e => e.Id).ToJsonProperty("id").IsRequired();
-            entity.Property(e => e.Name).IsRequired();
-            entity.HasIndex(e => e.Name);
-            entity.HasOne(productStock => productStock.ProductImage).WithMany(productImage => productImage.ProductStock);
+            entity.Property(e => e.Current).IsRequired();
+            entity.HasIndex(e => e.Current);
+            entity.HasOne(e => e.Product).WithMany(product => product.ProductStocks);
             entity.HasNoDiscriminator();
             entity.HasPartitionKey(e => e.Id);
             entity.HasManualThroughput(10000);

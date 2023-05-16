@@ -47,7 +47,6 @@ public static class ProductImageMockBuilder
     private static List<ProductImage> GenerateMockDomainProductImageList(int count)
     {
         return Fixture.Build<ProductImage>()
-            .Without(s => s.ProductStock)
             .With(s => s.Product, () => new Product())
             .With(s => s.LastUpdateDate, () => DateTime.Now)
             .With(s => s.LastUpdateUserId, () => "Test")
@@ -58,14 +57,12 @@ public static class ProductImageMockBuilder
     public static List<ProductImageData> GenerateMockProductImageDtoList(int count)
     {
         return Fixture.Build<ProductImageData>()
-            .Without(s => s.ProductStock)
             .CreateMany(count).ToList();
     }
 
     public static ProductImage GenerateMockProductImage()
     {
         return Fixture.Build<ProductImage>()
-            .Without(s => s.ProductStock)
             .Without(s => s.Product)
             .With(s => s.LastUpdateDate, () => DateTime.Now)
             .With(s => s.LastUpdateUserId, () => "Test")

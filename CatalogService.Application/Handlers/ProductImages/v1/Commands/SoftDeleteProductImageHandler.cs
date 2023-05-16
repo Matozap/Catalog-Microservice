@@ -31,7 +31,7 @@ public class SoftDeleteProductImageHandler : IRequestHandler<SoftDeleteProductIm
 
     private async Task<ProductImage> DisableProductImage(string productImageId)
     {
-        var entity = await _repository.GetAsSingleAsync<ProductImage, string>(c => c.Id == productImageId || c.Code == productImageId);
+        var entity = await _repository.GetAsSingleAsync<ProductImage, string>(c => c.Id == productImageId || c.Title == productImageId);
         if (entity == null) return null;
         
         entity.Disabled = true;

@@ -32,7 +32,7 @@ public class CreateProductStockTests
     public void CreateProductStockInvalidNameTest()
     {
         var resultDto = ProductStockMockBuilder.GenerateMockProductStockDtoList(1).First();
-        resultDto.Name = "";
+        resultDto.Current = 1;
         
         var classToHandle = new CreateProductStock
         {

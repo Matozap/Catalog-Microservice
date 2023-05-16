@@ -29,7 +29,7 @@ public class DeleteProductImageHandler : IRequestHandler<DeleteProductImage, str
 
     private async Task<ProductImage> DeleteProductImageAsync(string productImageId)
     {
-        var entity = await _repository.GetAsSingleAsync<ProductImage, string>(c => c.Id == productImageId || c.Code == productImageId);
+        var entity = await _repository.GetAsSingleAsync<ProductImage, string>(c => c.Id == productImageId || c.Title == productImageId);
         if (entity == null) return null;
             
         await _repository.DeleteAsync(entity);

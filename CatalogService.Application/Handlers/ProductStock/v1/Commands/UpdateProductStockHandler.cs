@@ -2,7 +2,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using CatalogService.Application.Handlers.ProductStock.v1.Requests;
 using CatalogService.Application.Interfaces;
-using CatalogService.Domain;
 using CatalogService.Message.Contracts.ProductStock.v1;
 using Mapster;
 using MediatR;
@@ -23,21 +22,32 @@ public class UpdateProductStockHandler : IRequestHandler<UpdateProductStock, Pro
 
     public async Task<ProductStockData> Handle(UpdateProductStock request, CancellationToken cancellationToken)
     {
-        var result = await UpdateProductStock(request.Details);
-        _logger.LogInformation("ProductStock with id {ProductStockID} updated successfully", request.Details.Id);
+        var result = await UpdateProductStock(request);
+        _logger.LogInformation("ProductStock for product with id {ProductStockID} updated to {CurrentStock}", request.Id, result.Current.ToString("F2"));
             
         return result;
     }
 
-    private async Task<ProductStockData> UpdateProductStock(ProductStockData productStockData)
+    private async Task<ProductStockData> UpdateProductStock(UpdateProductStock request)
     {
-        var entity = await _repository.GetAsSingleAsync<Domain.ProductStock, string>(productStock => productStock.Id == productStockData.Id);
-        if (entity == null) return null;
+        var stockValue = new Domain.ProductStock()
+        {
+            ProductId = request.Id,
+            Previous = 0,
+            Booked = 0
+        };
+        var entity = await _repository.GetAsSingleAsync<Domain.ProductStock, string>(productStock => productStock.ProductId == request.Id, orderDescending: stock => stock.Id);
+        if (entity == null)
+        {
+            stockValue.Current = request.Value;
+        }
+        else
+        {
+            stockValue.Previous = stockValue.Current;
+            stockValue.Current += request.Value;
+        }
         
-        productStockData.ProductImageId = entity.ProductImageId;
-        var changes = productStockData.Adapt(entity);
-        
-        await _repository.UpdateAsync(changes);
-        return changes.Adapt<Domain.ProductStock, ProductStockData>();
+        await _repository.AddAsync(stockValue);
+        return stockValue.Adapt<Domain.ProductStock, ProductStockData>();
     }
 }

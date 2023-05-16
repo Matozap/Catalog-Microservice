@@ -1,16 +1,12 @@
 using System;
-using System.Configuration;
-using System.IO;
 using System.IO.Compression;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Bustr;
-using Bustr.Bus;
 using CatalogService.API.Helpers.Configuration;
 using CatalogService.API.Helpers.Middleware;
 using CatalogService.API.Inputs.Consumers.Self;
 using DistributedCache.Core;
-using DistributedCache.Core.Configuration;
 using CatalogService.API.Inputs.Grpc;
 using CatalogService.Application;
 using CatalogService.Infrastructure;

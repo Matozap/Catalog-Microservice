@@ -2,8 +2,10 @@ namespace CatalogService.Domain;
 
 public class ProductStock : EntityBase
 {
-    public string Name { get; set; }
+    public decimal Current { get; set; }
+    public decimal Booked { get; set; }
+    public decimal Previous { get; set; }
     public bool Disabled { get; set; }
-    public string ProductImageId { get; set; }
-    public virtual ProductImage ProductImage { get; set; }
+    public string ProductId { get; set; }
+    public virtual Product Product { get; set; }
 }

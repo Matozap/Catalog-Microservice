@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using CatalogService.API.Outputs;
 using CatalogService.API.Outputs.Base;
+using CatalogService.Application.Handlers.ProductStock.v1.Requests;
 using CatalogService.Message.Contracts.ProductStock.v1;
 using MediatR;
 using Microsoft.Azure.Functions.Worker;
@@ -31,7 +32,7 @@ public class ProductStockFunction
     
     [Function($"ProductStock-{nameof(Update)}")]
     public async Task<HttpResponseData> Update([HttpTrigger(AuthorizationLevel.Anonymous, "put", Route = "v1/productStock")] HttpRequestData req)
-        => await _productStockOutput.UpdateAsync<HttpResponseData>(await req.ReadFromJsonAsync<ProductStockData>(), req);
+        => await _productStockOutput.UpdateAsync<HttpResponseData>(await req.ReadFromJsonAsync<UpdateProductStock>(), req);
     
     [Function($"ProductStock-{nameof(Disable)}")]
     public async Task<HttpResponseData> Disable([HttpTrigger(AuthorizationLevel.Anonymous, "delete", Route = "v1/productStock/disable/{id}" )] HttpRequestData req, string id)

@@ -32,7 +32,7 @@ public class CreateProductImageTests
     public void CreateProductImageInvalidNameTest()
     {
         var resultDto = ProductImageMockBuilder.GenerateMockProductImageDtoList(1).First();
-        resultDto.Name = "";
+        resultDto.Url = "";
         
         var classToHandle = new CreateProductImage
         {

@@ -3,7 +3,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using CatalogService.Application.Handlers.ProductStock.v1.Requests;
 using CatalogService.Application.Interfaces;
-using CatalogService.Domain;
 using CatalogService.Message.Contracts.ProductStock.v1;
 using Mapster;
 using MediatR;
@@ -24,8 +23,6 @@ public class CreateProductStockHandler : IRequestHandler<CreateProductStock, Pro
 
     public async Task<ProductStockData> Handle(CreateProductStock request, CancellationToken cancellationToken)
     {
-        ArgumentException.ThrowIfNullOrEmpty(request.Details?.Name);
-        
         var resultEntity = await CreateProductStock(request.Details);
         if (resultEntity == null) return null;
         
@@ -37,7 +34,7 @@ public class CreateProductStockHandler : IRequestHandler<CreateProductStock, Pro
 
     private async Task<Domain.ProductStock> CreateProductStock(ProductStockData productStock)
     {
-        if (await _repository.GetAsSingleAsync<Domain.ProductStock, string>(e => e.Name == productStock.Name && e.ProductImageId == productStock.ProductImageId) != null)
+        if (await _repository.GetAsSingleAsync<Domain.ProductStock, string>(e => e.Current == productStock.Current && e.ProductId == productStock.ProductId) != null)
         {
             return null;
         }

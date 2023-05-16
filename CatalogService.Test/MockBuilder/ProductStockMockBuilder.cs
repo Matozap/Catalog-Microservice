@@ -47,7 +47,6 @@ public static class ProductStockMockBuilder
     private static List<ProductStock> GenerateMockDomainProductStockList(int count)
     {
         return Fixture.Build<ProductStock>()
-            .With(s => s.ProductImage, () => new ProductImage())
             .With(s => s.LastUpdateDate, () => DateTime.Now)
             .With(s => s.LastUpdateUserId, () => "Test")
             .CreateMany(count)
@@ -63,7 +62,6 @@ public static class ProductStockMockBuilder
     public static ProductStock GenerateMockProductStock()
     {
         return Fixture.Build<ProductStock>()
-            .Without(s => s.ProductImage)
             .With(s => s.LastUpdateDate, () => DateTime.Now)
             .With(s => s.LastUpdateUserId, () => "Test")
             .Create();

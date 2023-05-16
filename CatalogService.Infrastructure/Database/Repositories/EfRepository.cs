@@ -68,6 +68,7 @@ public class EfRepository : IRepository
         var result = ApplySpec(predicate, orderAscending, orderDescending, selectExpression);
         return includeNavigationalProperties switch
         {
+            true when typeof(T) == typeof(ProductCategory) => (await LoadAllNavigationalPropertiesAsync(result as IQueryable<ProductCategory>)).ToList() as List<T>,
             true when typeof(T) == typeof(Product) => (await LoadAllNavigationalPropertiesAsync(result as IQueryable<Product>)).ToList() as List<T>,
             true when typeof(T) == typeof(ProductImage) => (await LoadAllNavigationalPropertiesAsync(result as IQueryable<ProductImage>)).ToList() as List<T>,
             true when typeof(T) == typeof(ProductStock) => (await LoadAllNavigationalPropertiesAsync(result as IQueryable<ProductStock>)).ToList() as List<T>,
@@ -82,6 +83,7 @@ public class EfRepository : IRepository
 
         return includeNavigationalProperties switch
         {
+            true when typeof(T) == typeof(ProductCategory) => (await LoadAllNavigationalPropertiesAsync(result as IQueryable<ProductCategory>)).FirstOrDefault() as T,
             true when typeof(T) == typeof(Product) => (await LoadAllNavigationalPropertiesAsync(result as IQueryable<Product>)).FirstOrDefault() as T,
             true when typeof(T) == typeof(ProductImage) => (await LoadAllNavigationalPropertiesAsync(result as IQueryable<ProductImage>)).FirstOrDefault() as T,
             true when typeof(T) == typeof(ProductStock) => (await LoadAllNavigationalPropertiesAsync(result as IQueryable<ProductStock>)).FirstOrDefault() as T,
@@ -117,6 +119,46 @@ public class EfRepository : IRepository
         return result;
     }
     
+    private async Task<List<ProductCategory>> LoadAllNavigationalPropertiesAsync(IQueryable<ProductCategory> source)
+    {
+        switch (_databaseOptions.EngineType)
+        {
+            case EngineType.NonRelational:
+            {
+                var partialResult = await source.AsNoTracking().ToListAsync();
+                return partialResult.Select(productCategory =>
+                {
+                    productCategory.Products = _applicationContext.Set<Product>().Where(product => product.ProductCategoryId == productCategory.Id).OrderBy(productImage => productImage.Name)
+                        .AsNoTracking()
+                        .ToList();
+
+                    productCategory.Products = productCategory.Products.Select(productItem =>
+                    {
+                        productItem.ProductImages = _applicationContext.Set<ProductImage>().Where(productImage => productImage.ProductId == productCategory.Id).OrderBy(productImage => productImage.Title)
+                            .AsNoTracking()
+                            .ToList();
+                        
+                        productItem.ProductStocks = _applicationContext.Set<ProductStock>().Where(productStocks => productStocks.ProductId == productCategory.Id).OrderBy(productStocks => productStocks.ProductId)
+                            .AsNoTracking()
+                            .ToList();
+
+                        return productItem;
+                    }).ToList();
+                    
+                    return productCategory;
+                }).ToList();
+            }
+            case EngineType.Relational:
+            default:
+                return source
+                    .Include(category => category.Products).ThenInclude(product => product.ProductImages.Where(productImage => !productImage.Disabled).OrderBy(productImage => productImage.Title))
+                    .Include(category => category.Products).ThenInclude(s => s.ProductStocks.Where(productStock => !productStock.Disabled).OrderBy(productStock => productStock.ProductId))
+                    .AsSplitQuery()
+                    .AsNoTracking()
+                    .ToList();
+        }
+    }
+    
     private async Task<List<Product>> LoadAllNavigationalPropertiesAsync(IQueryable<Product> source)
     {
         switch (_databaseOptions.EngineType)
@@ -126,25 +168,21 @@ public class EfRepository : IRepository
                 var partialResult = await source.AsNoTracking().ToListAsync();
                 return partialResult.Select(product =>
                 {
-                    product.ProductImages = _applicationContext.Set<ProductImage>().Where(productImage => productImage.ProductId == product.Id).OrderBy(productImage => productImage.Name)
+                    product.ProductImages = _applicationContext.Set<ProductImage>().Where(productImage => productImage.ProductId == product.Id).OrderBy(productImage => productImage.Title)
                         .AsNoTracking()
                         .ToList();
 
-                    product.ProductImages = product.ProductImages.Select(f =>
-                    {
-                        f.ProductStock = _applicationContext.Set<ProductStock>().Where(productStock => productStock.ProductImageId == f.Id).OrderBy(productStock => productStock.Name)
-                            .AsNoTracking()
-                            .ToList();
-                        return f;
-                    }).ToList();
+                    product.ProductStocks = _applicationContext.Set<ProductStock>().Where(productStocks => productStocks.ProductId == product.Id).OrderBy(productStocks => productStocks.ProductId)
+                        .AsNoTracking()
+                        .ToList();
 
                     return product;
                 }).ToList();
             }
             case EngineType.Relational:
             default:
-                return source.Include(product => product.ProductImages.Where(productImage => !productImage.Disabled).OrderBy(productImage => productImage.Name))
-                    .ThenInclude(s => s.ProductStock.Where(productStock => !productStock.Disabled).OrderBy(productStock => productStock.Name))
+                return source.Include(product => product.ProductImages.Where(productImage => !productImage.Disabled).OrderBy(productImage => productImage.Title))
+                    .Include(s => s.ProductStocks.Where(productStock => !productStock.Disabled).OrderBy(productStock => productStock.ProductId))
                     .AsSplitQuery()
                     .AsNoTracking()
                     .ToList();
@@ -158,18 +196,11 @@ public class EfRepository : IRepository
             case EngineType.NonRelational:
             {
                 var partialResult = await source.AsNoTracking().ToListAsync();
-                return partialResult.Select(productImage =>
-                {
-                    productImage.ProductStock = _applicationContext.Set<ProductStock>().Where(productStock => productStock.ProductImageId == productImage.Id).OrderBy(productStock => productStock.Name)
-                        .AsNoTracking()
-                        .ToList();
-                    return productImage;
-                }).ToList();
+                return partialResult;
             }
             case EngineType.Relational:
             default:
-                return source.Include(productImage => productImage.ProductStock.Where(c => !c.Disabled).OrderBy(productStock => productStock.Name))
-                    .Include(productImage => productImage.Product)
+                return source
                     .AsSplitQuery()
                     .AsNoTracking()
                     .ToList();
@@ -183,7 +214,7 @@ public class EfRepository : IRepository
             case EngineType.NonRelational:
                 return await source.AsNoTracking().ToListAsync();
             default:
-                return source.AsSplitQuery().Include(productStock => productStock.ProductImage).AsNoTracking().ToList();
+                return source.AsSplitQuery().AsNoTracking().ToList();
         }
     }
     

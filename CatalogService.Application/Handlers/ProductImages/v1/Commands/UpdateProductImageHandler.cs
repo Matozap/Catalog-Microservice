@@ -31,7 +31,7 @@ public class UpdateProductImageHandler : IRequestHandler<UpdateProductImage, Pro
 
     private async Task<ProductImageData> UpdateProductImage(ProductImageData productImageData)
     {
-        var entity = await _repository.GetAsSingleAsync<ProductImage, string>(productImage => productImage.Id == productImageData.Id || productImage.Code == productImageData.Id);
+        var entity = await _repository.GetAsSingleAsync<ProductImage, string>(productImage => productImage.Id == productImageData.Id || productImage.Title == productImageData.Id);
         if (entity == null) return null;
 
         productImageData.ProductId = entity.ProductId;

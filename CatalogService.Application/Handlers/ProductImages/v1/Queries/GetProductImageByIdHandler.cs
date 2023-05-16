@@ -48,8 +48,8 @@ public class GetProductImageByIdHandler : IRequestHandler<GetProductImageById, o
     private async Task<ProductImageData> GetProductImageById(string id)
     {
         var entity = await _repository.GetAsSingleAsync<ProductImage, string>(
-            predicate: productImage => (productImage.Id == id || productImage.Code == id) && !productImage.Disabled,
-            orderAscending: productImage => productImage.Name,
+            predicate: productImage => (productImage.Id == id || productImage.Title == id) && !productImage.Disabled,
+            orderAscending: productImage => productImage.Url,
             includeNavigationalProperties: true);
         var resultDto = entity.Adapt<ProductImage, ProductImageData>();
         return resultDto;

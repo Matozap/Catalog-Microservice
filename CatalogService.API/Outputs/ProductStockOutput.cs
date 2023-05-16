@@ -53,14 +53,9 @@ public class ProductStockOutput : OutputBase
     }
     
     [NonAction]
-    public async Task<T> UpdateAsync<T>(ProductStockData data, HttpRequestData httpRequestData = null) where T: class
+    public async Task<T> UpdateAsync<T>(UpdateProductStock data, HttpRequestData httpRequestData = null) where T: class
     {
-        var query = new UpdateProductStock
-        {
-            Details = data
-        };
-        
-        var result = await _mediator.Send(query);
+        var result = await _mediator.Send(data);
         return await TransformToOutputAsync(result, result == null ? HttpStatusCode.NotFound : HttpStatusCode.OK, httpRequestData) as T;
     }
     

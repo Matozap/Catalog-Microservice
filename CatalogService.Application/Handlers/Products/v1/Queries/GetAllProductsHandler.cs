@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -9,7 +8,6 @@ using CatalogService.Domain;
 using CatalogService.Message.Contracts.Products.v1;
 using Mapster;
 using MediatR;
-using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
 
 namespace CatalogService.Application.Handlers.Products.v1.Queries;
