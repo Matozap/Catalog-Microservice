@@ -1,11 +1,13 @@
+using System.Runtime.Serialization;
+using CatalogService.Message.Contracts.Common.Interfaces;
 using FluentValidation;
-using CatalogService.Application.Interfaces;
-using CatalogService.Message.Contracts.ProductStock.v1;
 
-namespace CatalogService.Application.Handlers.ProductStock.v1.Requests;
+namespace CatalogService.Message.Contracts.ProductStock.v1.Requests;
 
+[DataContract]
 public class CreateProductStock : ICommand<ProductStockData>
 {
+    [DataMember(Order = 1)]
     public ProductStockData Details { get; init; }
 }
 

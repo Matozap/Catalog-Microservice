@@ -1,11 +1,13 @@
+using System.Runtime.Serialization;
+using CatalogService.Message.Contracts.Common.Interfaces;
 using FluentValidation;
-using CatalogService.Application.Interfaces;
-using CatalogService.Message.Contracts.ProductImages.v1;
 
-namespace CatalogService.Application.Handlers.ProductImages.v1.Requests;
+namespace CatalogService.Message.Contracts.ProductImages.v1.Requests;
 
+[DataContract]
 public class CreateProductImage : ICommand<ProductImageData>
 {
+    [DataMember(Order = 1)]
     public ProductImageData Details { get; init; }
 }
 

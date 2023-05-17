@@ -1,9 +1,10 @@
 using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using CatalogService.Application.Handlers.ProductCategories.v1.Requests;
 using CatalogService.Application.Interfaces;
 using CatalogService.Domain;
+using CatalogService.Message.Contracts.ProductCategories.v1.Requests;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
@@ -32,12 +33,35 @@ public class DeleteProductCategoryHandler : IRequestHandler<DeleteProductCategor
 
     private async Task<ProductCategory> DeleteProductCategoryAsync(string id)
     {
-        var entity = await _repository.GetAsSingleAsync<ProductCategory, string>(c => c.Id == id);
-            
-        if(entity != null)
-        {                
-            await _repository.DeleteAsync(entity);
+        var entity = await _repository.GetAsSingleAsync<ProductCategory, string>(c => c.Id == id, includeNavigationalProperties: true);
+
+        if (entity == null) return null;
+        
+        if (entity.Products != null)
+        {
+            foreach (var product in entity.Products.ToList())
+            {
+                if (product.ProductImages?.Count > 0)
+                {
+                    foreach (var productImage in product.ProductImages.ToList())
+                    {
+                        await _repository.DeleteAsync(productImage);
+                    }
+                }
+                
+                if (product.ProductStocks?.Count > 0)
+                {
+                    foreach (var productStock in product.ProductStocks.ToList())
+                    {
+                        await _repository.DeleteAsync(productStock);
+                    }
+                }
+                
+                await _repository.DeleteAsync(product);
+            }
         }
+            
+        await _repository.DeleteAsync(entity);
 
         return entity;
     }

@@ -2,10 +2,10 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using DistributedCache.Core;
-using CatalogService.Application.Handlers.ProductStock.v1.Requests;
 using CatalogService.Application.Interfaces;
 using CatalogService.Domain;
 using CatalogService.Message.Contracts.ProductStock.v1;
+using CatalogService.Message.Contracts.ProductStock.v1.Requests;
 using Mapster;
 using MediatR;
 using Microsoft.Extensions.Logging;
@@ -27,7 +27,7 @@ public class GetAllProductStockHandler : IRequestHandler<GetAllProductStock, Lis
 
     public async Task<List<ProductStockData>> Handle(GetAllProductStock request, CancellationToken cancellationToken)
     {
-        var cacheKey = GetCacheKey(request.ProductImageId);
+        var cacheKey = GetCacheKey(request.ProductStockId);
 
         var cachedValue = await _cache.GetCacheValueAsync<List<ProductStockData>>(cacheKey, cancellationToken);
         if (cachedValue != null)
@@ -36,7 +36,7 @@ public class GetAllProductStockHandler : IRequestHandler<GetAllProductStock, Lis
             return cachedValue;
         }
 
-        var dataValue = await GetAllProductStock(request.ProductImageId);
+        var dataValue = await GetAllProductStock(request.ProductStockId);
 
         _ = _cache.SetCacheValueAsync(cacheKey, dataValue, cancellationToken);
 
@@ -45,7 +45,7 @@ public class GetAllProductStockHandler : IRequestHandler<GetAllProductStock, Lis
 
     private async Task<List<ProductStockData>> GetAllProductStock(string productId)
     {
-        var parentByCode = await _repository.GetAsSingleAsync<Product,string>(productStockItem => productStockItem.Id == productId || productStockItem.Sku == productId) ?? new Product();
+        var parentByCode = await _repository.GetAsSingleAsync<Product,string>(productItem => productItem.Id == productId || productItem.Sku == productId) ?? new Product();
         var entities = await _repository.GetAsListAsync<Domain.ProductStock,string>(
             predicate: productStock => productStock.ProductId == productId || productStock.ProductId == parentByCode.Id,
             orderDescending: productStock => productStock.Id,

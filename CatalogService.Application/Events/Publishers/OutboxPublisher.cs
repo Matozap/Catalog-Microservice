@@ -4,10 +4,12 @@ using System.Threading.Tasks;
 using Bustr.Bus;
 using CatalogService.Application.Interfaces;
 using CatalogService.Domain;
+using CatalogService.Message.Contracts.ProductCategories.v1;
 using CatalogService.Message.Contracts.ProductStock.v1;
 using CatalogService.Message.Contracts.Products.v1;
 using CatalogService.Message.Contracts.ProductImages.v1;
 using CatalogService.Message.Events;
+using CatalogService.Message.Events.ProductCategories.v1;
 using CatalogService.Message.Events.ProductStock.v1;
 using CatalogService.Message.Events.Products.v1;
 using CatalogService.Message.Events.ProductImages.v1;
@@ -40,6 +42,10 @@ public class OutboxPublisher : IOutboxPublisher
         {
             switch (outboxMessage.ObjectType)
             {
+                case nameof(ProductCategory):
+                    await PublishProductCategoryEvent(outboxMessage);
+                    break;
+                
                 case nameof(Product):
                     await PublishProductEvent(outboxMessage);
                     break;
@@ -59,6 +65,29 @@ public class OutboxPublisher : IOutboxPublisher
             await _repository.DeleteAsync(outboxMessage, skipOutbox: true);
         }
     } 
+    
+    private async Task PublishProductCategoryEvent(Outbox outboxMessage)
+    {
+        var product =  JsonSerializer.Deserialize<ProductCategory>(outboxMessage.JsonObject, _jsonSerializerOptions);
+        var productData = product.Adapt<ProductCategory, ProductCategoryData>();
+        
+        switch (outboxMessage.Operation)
+        {
+            case Operation.Create:
+                await _eventBus.PublishAsync(new ProductCategoryEvent { Details = productData, Action = EventAction.Created });
+                break;
+            case Operation.Update:
+                await _eventBus.PublishAsync(new ProductCategoryEvent { Details = productData, Action = EventAction.Updated });
+                break;
+            case Operation.Delete:
+                await _eventBus.PublishAsync(new ProductCategoryEvent { Details = productData, Action = EventAction.Deleted });
+                break;
+            case Operation.None:
+            default:
+                _logger.LogWarning("Unknown operation found in EventBusOutbox - Entity Name: {ObjectType}, Operation: {Operation}", outboxMessage.ObjectType, Enum.GetName(outboxMessage.Operation));
+                break;
+        }
+    }
     
     private async Task PublishProductEvent(Outbox outboxMessage)
     {

@@ -4,8 +4,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
 using CatalogService.Application.Handlers.ProductImages.v1.Commands;
-using CatalogService.Application.Handlers.ProductImages.v1.Requests;
 using CatalogService.Message.Contracts.ProductImages.v1;
+using CatalogService.Message.Contracts.ProductImages.v1.Requests;
 using CatalogService.Test.MockBuilder;
 using Xunit;
 

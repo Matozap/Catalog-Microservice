@@ -1,8 +1,8 @@
 using System.Net;
 using System.Threading.Tasks;
 using CatalogService.API.Outputs.Base;
-using CatalogService.Application.Handlers.Products.v1.Requests;
 using CatalogService.Message.Contracts.Products.v1;
+using CatalogService.Message.Contracts.Products.v1.Requests;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Functions.Worker.Http;
@@ -18,6 +18,16 @@ public class ProductOutput : OutputBase
         _mediator = mediator;
     }
 
+    [NonAction]
+    public async Task<T> GetAllAsync<T>(string id, HttpRequestData httpRequestData = null) where T: class
+    {
+        var result = await _mediator.Send(new GetAllProducts
+        {
+            Id = id
+        });
+        return await TransformToOutputAsync(result, HttpStatusCode.OK, httpRequestData) as T;
+    }
+    
     [NonAction]
     public async Task<T> GetAllAsync<T>(HttpRequestData httpRequestData = null) where T: class
     {

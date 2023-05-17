@@ -1,15 +1,14 @@
 using System.Runtime.Serialization;
+using CatalogService.Message.Contracts.Common.Interfaces;
 using FluentValidation;
-using CatalogService.Application.Interfaces;
-using CatalogService.Message.Contracts.ProductStock.v1;
 
-namespace CatalogService.Application.Handlers.ProductStock.v1.Requests;
+namespace CatalogService.Message.Contracts.ProductStock.v1.Requests;
 
 [DataContract]
 public class UpdateProductStock : ICommand<ProductStockData>
 {
     [DataMember(Order = 1)]
-    public string Id { get; init; }
+    public string ProductId { get; init; }
     [DataMember(Order = 2)]
     public decimal Value { get; init; }
 }

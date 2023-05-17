@@ -1,10 +1,11 @@
 using System.Collections.Generic;
-using CatalogService.Application.Interfaces;
-using CatalogService.Message.Contracts.ProductCategories.v1;
+using System.Runtime.Serialization;
+using CatalogService.Message.Contracts.Common.Interfaces;
 using FluentValidation;
 
-namespace CatalogService.Application.Handlers.ProductCategories.v1.Requests;
+namespace CatalogService.Message.Contracts.ProductCategories.v1.Requests;
 
+[DataContract]
 public class GetAllProductCategories : IQuery<List<ProductCategoryData>>
 {
     

@@ -25,6 +25,11 @@ public static class DependencyInjection
             .Map(dest => dest.ProductImages, src => MapToProductImageData(src), src => src.ProductImages != null)
             .TwoWays()
             .IgnoreNullValues(true);
+        TypeAdapterConfig<ProductData, Product>
+            .NewConfig()
+            .Map(dest => dest.ProductCategory, src => (ProductCategory)null)
+            .TwoWays()
+            .IgnoreNullValues(true);
         TypeAdapterConfig<ProductImage, ProductImageData>
             .NewConfig()
             .IgnoreNullValues(true);
@@ -43,6 +48,17 @@ public static class DependencyInjection
         services.AddScoped<IOutboxPublisher, OutboxPublisher>();
         services.AddScoped(typeof(IPipelineBehavior<,>), typeof(ApplicationPipelineBehaviour<,>));
         return services;
+    }
+    
+    private static IEnumerable<ProductImageData> MapToProductData(Product src)
+    {
+        return src.ProductImages.Select(productImage => new ProductImageData
+        {
+            Id = productImage.Id,
+            Title = productImage.Title,
+            Url = productImage.Url,
+            ProductId = productImage.ProductId
+        });
     }
 
     private static IEnumerable<ProductImageData> MapToProductImageData(Product src)

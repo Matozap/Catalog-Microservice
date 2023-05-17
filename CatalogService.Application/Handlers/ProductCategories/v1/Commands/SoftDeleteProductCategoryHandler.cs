@@ -1,9 +1,9 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using CatalogService.Application.Handlers.ProductCategories.v1.Requests;
 using CatalogService.Application.Interfaces;
 using CatalogService.Domain;
+using CatalogService.Message.Contracts.ProductCategories.v1.Requests;
 using MediatR;
 using Microsoft.Extensions.Logging;
 

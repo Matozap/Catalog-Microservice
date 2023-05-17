@@ -4,7 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using FluentValidation;
 using CatalogService.Application.Events.Publishers;
-using CatalogService.Application.Interfaces;
+using CatalogService.Message.Contracts.Common.Interfaces;
 using MediatR;
 
 namespace CatalogService.Application.Pipeline;

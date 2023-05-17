@@ -1,10 +1,13 @@
+using System.Runtime.Serialization;
+using CatalogService.Message.Contracts.Common.Interfaces;
 using FluentValidation;
-using CatalogService.Application.Interfaces;
 
-namespace CatalogService.Application.Handlers.ProductImages.v1.Requests;
+namespace CatalogService.Message.Contracts.ProductImages.v1.Requests;
 
+[DataContract]
 public class GetProductImageById : IQuery<object>
 {
+    [DataMember(Order = 1)]
     public string Id { get; init; }
 }
 

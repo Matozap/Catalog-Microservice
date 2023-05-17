@@ -1,7 +1,7 @@
 using System.Threading;
 using System.Threading.Tasks;
-using CatalogService.Application.Handlers.ProductStock.v1.Requests;
 using CatalogService.Application.Interfaces;
+using CatalogService.Message.Contracts.ProductStock.v1.Requests;
 using MediatR;
 using Microsoft.Extensions.Logging;
 

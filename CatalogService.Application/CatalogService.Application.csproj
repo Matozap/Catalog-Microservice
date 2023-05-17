@@ -22,7 +22,6 @@
 
   <ItemGroup>
     <Folder Include="Events\Subscriptions\" />
-    <Folder Include="Handlers\ProductStock\v1\Requests\" />
     <Folder Include="Handlers\Products\v1" />
     <Folder Include="Handlers\ProductImages\v1" />
   </ItemGroup>

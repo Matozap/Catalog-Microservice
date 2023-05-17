@@ -1,6 +1,6 @@
 using MediatR;
 
-namespace CatalogService.Application.Interfaces;
+namespace CatalogService.Message.Contracts.Common.Interfaces;
 
 public interface IQuery<out TIQueryResult> : IRequest<TIQueryResult>
 {

@@ -49,9 +49,12 @@ public class ClearCacheHandler : IRequestHandler<ClearCache, bool>
                 _logger.LogDebug(message);
                 var cacheKey = GetProductByIdHandler.GetCacheKey(request.ProductId);
                 await _cache.RemoveValueAsync(cacheKey, cancellationToken);
-                
-                cacheKey = GetAllProductsHandler.GetCacheKey();
-                await _cache.RemoveValueAsync(cacheKey, cancellationToken);
+
+                if (!string.IsNullOrEmpty(request.ProductCategoryId))
+                {
+                    cacheKey = GetAllProductsHandler.GetCacheKey(request.ProductCategoryId);
+                    await _cache.RemoveValueAsync(cacheKey, cancellationToken);
+                }
             }
             
             if (!string.IsNullOrEmpty(request.ProductImageCode) || !string.IsNullOrEmpty(request.ProductImageId))

@@ -1,8 +1,8 @@
 using System.Threading;
 using System.Threading.Tasks;
-using CatalogService.Application.Handlers.ProductStock.v1.Requests;
 using CatalogService.Application.Interfaces;
 using CatalogService.Message.Contracts.ProductStock.v1;
+using CatalogService.Message.Contracts.ProductStock.v1.Requests;
 using Mapster;
 using MediatR;
 using Microsoft.Extensions.Logging;
@@ -23,7 +23,7 @@ public class UpdateProductStockHandler : IRequestHandler<UpdateProductStock, Pro
     public async Task<ProductStockData> Handle(UpdateProductStock request, CancellationToken cancellationToken)
     {
         var result = await UpdateProductStock(request);
-        _logger.LogInformation("ProductStock for product with id {ProductStockID} updated to {CurrentStock}", request.Id, result.Current.ToString("F2"));
+        _logger.LogInformation("ProductStock for product with id {ProductStockID} updated to {CurrentStock}", request.ProductId, result.Current.ToString("F2"));
             
         return result;
     }
@@ -32,19 +32,19 @@ public class UpdateProductStockHandler : IRequestHandler<UpdateProductStock, Pro
     {
         var stockValue = new Domain.ProductStock()
         {
-            ProductId = request.Id,
+            ProductId = request.ProductId,
             Previous = 0,
             Booked = 0
         };
-        var entity = await _repository.GetAsSingleAsync<Domain.ProductStock, string>(productStock => productStock.ProductId == request.Id, orderDescending: stock => stock.Id);
+        var entity = await _repository.GetAsSingleAsync<Domain.ProductStock, string>(productStock => productStock.ProductId == request.ProductId, orderDescending: stock => stock.Id);
         if (entity == null)
         {
             stockValue.Current = request.Value;
         }
         else
         {
-            stockValue.Previous = stockValue.Current;
-            stockValue.Current += request.Value;
+            stockValue.Previous = entity.Current;
+            stockValue.Current = entity.Current + request.Value;
         }
         
         await _repository.AddAsync(stockValue);

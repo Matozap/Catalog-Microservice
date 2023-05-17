@@ -2,10 +2,10 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using DistributedCache.Core;
-using CatalogService.Application.Handlers.Products.v1.Requests;
 using CatalogService.Application.Interfaces;
 using CatalogService.Domain;
 using CatalogService.Message.Contracts.Products.v1;
+using CatalogService.Message.Contracts.Products.v1.Requests;
 using Mapster;
 using MediatR;
 using Microsoft.Extensions.Logging;
@@ -27,7 +27,7 @@ public class GetAllProductsHandler : IRequestHandler<GetAllProducts, List<Produc
 
     public async Task<List<ProductData>> Handle(GetAllProducts request, CancellationToken cancellationToken)
     {
-        var cacheKey = GetCacheKey();
+        var cacheKey = GetCacheKey(request.Id);
 
         var cachedValue = await _cache.GetCacheValueAsync<List<ProductData>>(cacheKey, cancellationToken);
         if (cachedValue != null)
@@ -36,17 +36,17 @@ public class GetAllProductsHandler : IRequestHandler<GetAllProducts, List<Produc
             return cachedValue;
         }
 
-        var dataValue = await GetAllProducts();
+        var dataValue = await GetAllProducts(request.Id);
 
         _ = _cache.SetCacheValueAsync(cacheKey, dataValue, cancellationToken);
 
         return dataValue;
     }
 
-    private async Task<List<ProductData>> GetAllProducts()
+    private async Task<List<ProductData>> GetAllProducts(string id)
     {
         var entities = await _repository.GetAsListAsync<Product, string>(
-             predicate: product => !product.Disabled, 
+             predicate: product => !product.Disabled && (string.IsNullOrEmpty(id) || product.ProductCategoryId == id), 
              orderAscending: product => product.Name, 
              selectExpression: product => new Product
                 {
@@ -63,5 +63,9 @@ public class GetAllProductsHandler : IRequestHandler<GetAllProducts, List<Produc
         return entities.Adapt<List<ProductData>>();
     }
     
-    public static string GetCacheKey() => "Products:All";
+    public static string GetCacheKey(string categoryId)
+    {
+        var id = string.IsNullOrEmpty(categoryId) ? "All" : categoryId;
+        return $"Products:All:{id}";
+    }
 }

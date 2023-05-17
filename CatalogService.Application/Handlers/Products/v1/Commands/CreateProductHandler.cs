@@ -1,10 +1,10 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using CatalogService.Application.Handlers.Products.v1.Requests;
 using CatalogService.Application.Interfaces;
 using CatalogService.Domain;
 using CatalogService.Message.Contracts.Products.v1;
+using CatalogService.Message.Contracts.Products.v1.Requests;
 using Mapster;
 using MediatR;
 using Microsoft.Extensions.Logging;

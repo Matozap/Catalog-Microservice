@@ -3,7 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
 using CatalogService.Application.Handlers.ProductStock.v1.Queries;
-using CatalogService.Application.Handlers.ProductStock.v1.Requests;
+using CatalogService.Message.Contracts.ProductStock.v1.Requests;
 using CatalogService.Test.MockBuilder;
 using Xunit;
 

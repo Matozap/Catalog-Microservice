@@ -1,10 +1,13 @@
-using CatalogService.Application.Interfaces;
+using System.Runtime.Serialization;
+using CatalogService.Message.Contracts.Common.Interfaces;
 using FluentValidation;
 
-namespace CatalogService.Application.Handlers.ProductCategories.v1.Requests;
+namespace CatalogService.Message.Contracts.ProductCategories.v1.Requests;
 
+[DataContract]
 public class SoftDeleteProductCategory : ICommand<string>
 {
+    [DataMember(Order = 1)]
     public string Id { get; init; }
 }
 

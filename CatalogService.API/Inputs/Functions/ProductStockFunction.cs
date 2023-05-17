@@ -1,8 +1,8 @@
 using System.Threading.Tasks;
 using CatalogService.API.Outputs;
 using CatalogService.API.Outputs.Base;
-using CatalogService.Application.Handlers.ProductStock.v1.Requests;
 using CatalogService.Message.Contracts.ProductStock.v1;
+using CatalogService.Message.Contracts.ProductStock.v1.Requests;
 using MediatR;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
@@ -41,4 +41,12 @@ public class ProductStockFunction
     [Function($"ProductStock-{nameof(Delete)}")]
     public async Task<HttpResponseData> Delete([HttpTrigger(AuthorizationLevel.Anonymous, "delete", Route = "v1/productStock/{id}")] HttpRequestData req, string id)
         => await _productStockOutput.DeleteAsync<HttpResponseData>(id, req);
+    
+    [Function($"ProductStock-{nameof(Book)}")]
+    public async Task<HttpResponseData> Book([HttpTrigger(AuthorizationLevel.Anonymous, "put", Route = "v1/productStock/book")] HttpRequestData req)
+        => await _productStockOutput.BookAsync<HttpResponseData>(await req.ReadFromJsonAsync<BookProductStock>(), req);
+    
+    [Function($"ProductStock-{nameof(Release)}")]
+    public async Task<HttpResponseData> Release([HttpTrigger(AuthorizationLevel.Anonymous, "put", Route = "v1/productStock/release")] HttpRequestData req)
+        => await _productStockOutput.ReleaseAsync<HttpResponseData>(await req.ReadFromJsonAsync<ReleaseProductStock>(), req);
 }

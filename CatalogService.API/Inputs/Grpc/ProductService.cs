@@ -17,7 +17,7 @@ public class ProductService : IProductService
         _productOutput = new ProductOutput(mediator, OutputType.Grpc);
     }
 
-    public async Task<List<ProductData>> GetAll(StringWrapper id) => await _productOutput.GetAllAsync<List<ProductData>>();
+    public async Task<List<ProductData>> GetAll(StringWrapper id) => await _productOutput.GetAllAsync<List<ProductData>>(id.Value);
     
     public async Task<ProductData> Get(StringWrapper id) => await _productOutput.GetAsync<ProductData>(id.Value);
     

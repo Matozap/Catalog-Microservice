@@ -2,9 +2,10 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using CatalogService.API.Outputs;
 using CatalogService.API.Outputs.Base;
-using CatalogService.Application.Handlers.ProductStock.v1.Requests;
 using CatalogService.Message.Contracts.ProductStock.v1;
 using CatalogService.Message.Contracts.Common;
+using CatalogService.Message.Contracts.ProductStock.v1.Requests;
+using CatalogService.Message.Contracts.ProductStock.v1.Responses;
 using MediatR;
 
 namespace CatalogService.API.Inputs.Grpc;
@@ -29,4 +30,8 @@ public class ProductStockService : IProductStockService
     public async Task Disable(StringWrapper id) => await _productStockOutput.DisableAsync<ProductStockData>(id.Value);
 
     public async Task Delete(StringWrapper id) => await _productStockOutput.DeleteAsync<ProductStockData>(id.Value);
+    
+    public async Task<BookProductStockResponse> Book(BookProductStock data) => await _productStockOutput.BookAsync<BookProductStockResponse>(data);
+    
+    public async Task<ReleaseProductStockResponse> Release(ReleaseProductStock data) => await _productStockOutput.ReleaseAsync<ReleaseProductStockResponse>(data);
 }

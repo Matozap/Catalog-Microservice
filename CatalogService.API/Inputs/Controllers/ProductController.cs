@@ -25,8 +25,17 @@ public class ProductController : ControllerBase
     /// <returns>All products</returns>
     /// <response code="200">OK</response>
     /// <response code="500">Internal Server error</response>
-    [HttpGet("products")]
+    [HttpGet("products/")]
     public async Task<IActionResult> GetAll() => await _productOutput.GetAllAsync<ActionResult>();
+    
+    /// <summary>
+    /// Gets all the products in the system.
+    /// </summary>
+    /// <returns>All products</returns>
+    /// <response code="200">OK</response>
+    /// <response code="500">Internal Server error</response>
+    [HttpGet("products/{id}")]
+    public async Task<IActionResult> GetAll(string id) => await _productOutput.GetAllAsync<ActionResult>(id);
 
     /// <summary>
     /// Gets a product by id (string).

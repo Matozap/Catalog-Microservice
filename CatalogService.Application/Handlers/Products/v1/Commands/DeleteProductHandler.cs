@@ -1,9 +1,10 @@
 using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using CatalogService.Application.Handlers.Products.v1.Requests;
 using CatalogService.Application.Interfaces;
 using CatalogService.Domain;
+using CatalogService.Message.Contracts.Products.v1.Requests;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
@@ -33,11 +34,26 @@ public class DeleteProductHandler : IRequestHandler<DeleteProduct, string>
     private async Task<Product> DeleteProductAsync(string id)
     {
         var entity = await _repository.GetAsSingleAsync<Product, string>(c => c.Id == id || c.Sku == id);
-            
-        if(entity != null)
-        {                
-            await _repository.DeleteAsync(entity);
+
+        if (entity == null) return null;
+        
+        if (entity.ProductImages?.Count > 0)
+        {
+            foreach (var productImage in entity.ProductImages.ToList())
+            {
+                await _repository.DeleteAsync(productImage);
+            }
         }
+                
+        if (entity.ProductStocks?.Count > 0)
+        {
+            foreach (var productStock in entity.ProductStocks.ToList())
+            {
+                await _repository.DeleteAsync(productStock);
+            }
+        }
+        
+        await _repository.DeleteAsync(entity);
 
         return entity;
     }

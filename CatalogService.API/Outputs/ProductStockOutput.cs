@@ -1,8 +1,8 @@
 using System.Net;
 using System.Threading.Tasks;
 using CatalogService.API.Outputs.Base;
-using CatalogService.Application.Handlers.ProductStock.v1.Requests;
 using CatalogService.Message.Contracts.ProductStock.v1;
+using CatalogService.Message.Contracts.ProductStock.v1.Requests;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Functions.Worker.Http;
@@ -23,7 +23,7 @@ public class ProductStockOutput : OutputBase
     {
         var result = await _mediator.Send(new GetAllProductStock
         {
-            ProductImageId = productImageId
+            ProductStockId = productImageId
         });
         return await TransformToOutputAsync(result, HttpStatusCode.OK, httpRequestData) as T;
     }
@@ -54,6 +54,20 @@ public class ProductStockOutput : OutputBase
     
     [NonAction]
     public async Task<T> UpdateAsync<T>(UpdateProductStock data, HttpRequestData httpRequestData = null) where T: class
+    {
+        var result = await _mediator.Send(data);
+        return await TransformToOutputAsync(result, result == null ? HttpStatusCode.NotFound : HttpStatusCode.OK, httpRequestData) as T;
+    }
+    
+    [NonAction]
+    public async Task<T> BookAsync<T>(BookProductStock data, HttpRequestData httpRequestData = null) where T: class
+    {
+        var result = await _mediator.Send(data);
+        return await TransformToOutputAsync(result, result == null ? HttpStatusCode.NotFound : HttpStatusCode.OK, httpRequestData) as T;
+    }
+    
+    [NonAction]
+    public async Task<T> ReleaseAsync<T>(ReleaseProductStock data, HttpRequestData httpRequestData = null) where T: class
     {
         var result = await _mediator.Send(data);
         return await TransformToOutputAsync(result, result == null ? HttpStatusCode.NotFound : HttpStatusCode.OK, httpRequestData) as T;

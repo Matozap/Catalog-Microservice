@@ -1,11 +1,13 @@
+using System.Runtime.Serialization;
+using CatalogService.Message.Contracts.Common.Interfaces;
 using FluentValidation;
-using CatalogService.Application.Interfaces;
-using CatalogService.Message.Contracts.Products.v1;
 
-namespace CatalogService.Application.Handlers.Products.v1.Requests;
+namespace CatalogService.Message.Contracts.Products.v1.Requests;
 
+[DataContract]
 public class CreateProduct : ICommand<ProductData>
 {
+    [DataMember(Order = 1)]
     public ProductData Details { get; init; }
 }
 

@@ -1,8 +1,8 @@
 using System.Threading.Tasks;
 using CatalogService.API.Outputs;
 using CatalogService.API.Outputs.Base;
-using CatalogService.Application.Handlers.ProductStock.v1.Requests;
 using CatalogService.Message.Contracts.ProductStock.v1;
+using CatalogService.Message.Contracts.ProductStock.v1.Requests;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -60,7 +60,7 @@ public class ProductStockController
     /// <response code="500">Internal Server error</response>
     [HttpPut("productStock")]
     public async Task<IActionResult> Update([FromBody] UpdateProductStock data) => await _productStockOutput.UpdateAsync<ActionResult>(data);
-
+    
     /// <summary>
     /// Does a soft delete on the productStock with the given id.
     /// </summary>
@@ -78,4 +78,24 @@ public class ProductStockController
     /// <response code="500">Internal Server error</response>
     [HttpDelete("productStock/{id}")]
     public async Task<IActionResult> Delete(string id) => await _productStockOutput.DeleteAsync<ActionResult>(id);
+    
+    /// <summary>
+    /// Books productStock based in the given object.
+    /// </summary>
+    /// <param name="data">ProductStock Data</param>
+    /// <returns>Product</returns>
+    /// <response code="200">OK</response>
+    /// <response code="500">Internal Server error</response>
+    [HttpPost("productStock/book")]
+    public async Task<IActionResult> Book([FromBody] BookProductStock data) => await _productStockOutput.BookAsync<ActionResult>(data);
+    
+    /// <summary>
+    /// Releases productStock based in the given object.
+    /// </summary>
+    /// <param name="data">ProductStock Data</param>
+    /// <returns>Product</returns>
+    /// <response code="200">OK</response>
+    /// <response code="500">Internal Server error</response>
+    [HttpPost("productStock/release")]
+    public async Task<IActionResult> Release([FromBody] ReleaseProductStock data) => await _productStockOutput.ReleaseAsync<ActionResult>(data);
 }

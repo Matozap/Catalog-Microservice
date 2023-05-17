@@ -18,8 +18,8 @@ public class ProductFunction
     }
     
     [Function($"Product-{nameof(GetAll)}")]
-    public async Task<HttpResponseData> GetAll([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "v1/products")] HttpRequestData req) 
-        => await _productOutput.GetAllAsync<HttpResponseData>(req);
+    public async Task<HttpResponseData> GetAll([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "v1/products")] HttpRequestData req, string id) 
+        => await _productOutput.GetAllAsync<HttpResponseData>(id, req);
 
     [Function($"Product-{nameof(Get)}")]
     public async Task<HttpResponseData> Get([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "v1/product/{id}")] HttpRequestData req, string id) 
