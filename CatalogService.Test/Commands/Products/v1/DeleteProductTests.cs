@@ -2,9 +2,9 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.Threading;
 using System.Threading.Tasks;
+using CatalogService.Application.Products.Commands;
+using CatalogService.Application.Products.Requests;
 using FluentAssertions;
-using CatalogService.Application.Handlers.Products.v1.Commands;
-using CatalogService.Message.Contracts.Products.v1.Requests;
 using CatalogService.Test.MockBuilder;
 using Xunit;
 

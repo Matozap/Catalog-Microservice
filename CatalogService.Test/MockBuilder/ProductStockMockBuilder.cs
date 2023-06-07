@@ -2,14 +2,17 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 using AutoFixture;
+using Bustr.Bus;
+using CatalogService.Application.Common.Interfaces;
+using CatalogService.Application.ProductStock.Commands;
+using CatalogService.Application.ProductStock.Events;
+using CatalogService.Application.ProductStock.Queries;
+using CatalogService.Application.ProductStock.Requests;
+using CatalogService.Application.ProductStock.Responses;
 using DistributedCache.Core;
-using CatalogService.Application.Handlers.ProductStock.v1.Commands;
-using CatalogService.Application.Handlers.ProductStock.v1.Queries;
-using CatalogService.Application.Interfaces;
 using CatalogService.Domain;
-using CatalogService.Message.Contracts.ProductStock.v1;
-using CatalogService.Message.Contracts.ProductStock.v1.Requests;
 using MediatR;
 using Microsoft.Extensions.Logging.Abstractions;
 using NSubstitute;
@@ -43,12 +46,22 @@ public static class ProductStockMockBuilder
         var cache = Substitute.For<ICache>();
         return cache;
     }
+    
+    private static IEventBus GenerateMockEventBus()
+    {
+        var eventBus = Substitute.For<IEventBus>();
+        eventBus.PublishAsync(Arg.Any<ProductStockEvent>()).Returns(Task.CompletedTask);
+        eventBus.PublishAsync(Arg.Any<ProductStockBookEvent>()).Returns(Task.CompletedTask);
+        eventBus.PublishAsync(Arg.Any<ProductStockReleaseEvent>()).Returns(Task.CompletedTask);
+        return eventBus;
+    }
 
     private static List<ProductStock> GenerateMockDomainProductStockList(int count)
     {
         return Fixture.Build<ProductStock>()
             .With(s => s.LastUpdateDate, () => DateTime.Now)
             .With(s => s.LastUpdateUserId, () => "Test")
+            .Without(s => s.Product)
             .CreateMany(count)
             .ToList();
     }
@@ -64,6 +77,7 @@ public static class ProductStockMockBuilder
         return Fixture.Build<ProductStock>()
             .With(s => s.LastUpdateDate, () => DateTime.Now)
             .With(s => s.LastUpdateUserId, () => "Test")
+            .Without(s => s.Product)
             .Create();
     }
 
@@ -79,13 +93,13 @@ public static class ProductStockMockBuilder
         if (typeof(T) == typeof(UpdateProductStockHandler))
         {
             return new UpdateProductStockHandler(NullLogger<UpdateProductStockHandler>.Instance,
-                GenerateMockRepository(catalog));
+                GenerateMockRepository(catalog), GenerateMockObjectCache(), GenerateMockEventBus());
         }
         
         if (typeof(T) == typeof(DeleteProductStockHandler))
         {
             return new DeleteProductStockHandler(NullLogger<DeleteProductStockHandler>.Instance,
-                GenerateMockRepository(catalog));
+                GenerateMockRepository(catalog), GenerateMockObjectCache(), GenerateMockEventBus());
         }
         
         if (typeof(T) == typeof(CreateProductStockHandler))
@@ -94,7 +108,7 @@ public static class ProductStockMockBuilder
             repository.GetAsSingleAsync(Arg.Any<Expression<Func<ProductStock, bool>>>(), Arg.Any<Expression<Func<ProductStock, string>>>(), 
                 Arg.Any<Expression<Func<ProductStock, string>>>(), Arg.Any<Expression<Func<ProductStock, ProductStock>>>(), Arg.Any<bool>()).Returns((ProductStock)null);
             return new CreateProductStockHandler(NullLogger<CreateProductStockHandler>.Instance,
-                repository);
+                repository, GenerateMockObjectCache(), GenerateMockEventBus());
         }
         
         if (typeof(T) == typeof(GetAllProductStockHandler))

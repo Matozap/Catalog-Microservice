@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using CatalogService.Application.ProductImages.Queries;
+using CatalogService.Application.ProductImages.Requests;
+using CatalogService.Application.ProductImages.Responses;
 using FluentAssertions;
-using CatalogService.Application.Handlers.ProductImages.v1.Queries;
-using CatalogService.Message.Contracts.ProductImages.v1;
-using CatalogService.Message.Contracts.ProductImages.v1.Requests;
 using CatalogService.Test.MockBuilder;
 using Xunit;
 

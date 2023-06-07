@@ -2,14 +2,17 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 using AutoFixture;
+using Bustr.Bus;
+using CatalogService.Application.Common.Interfaces;
+using CatalogService.Application.Products.Commands;
+using CatalogService.Application.Products.Events;
+using CatalogService.Application.Products.Queries;
+using CatalogService.Application.Products.Requests;
+using CatalogService.Application.Products.Responses;
 using DistributedCache.Core;
-using CatalogService.Application.Handlers.Products.v1.Commands;
-using CatalogService.Application.Handlers.Products.v1.Queries;
-using CatalogService.Application.Interfaces;
 using CatalogService.Domain;
-using CatalogService.Message.Contracts.Products.v1;
-using CatalogService.Message.Contracts.Products.v1.Requests;
 using MediatR;
 using Microsoft.Extensions.Logging.Abstractions;
 using NSubstitute;
@@ -43,11 +46,20 @@ public static class ProductMockBuilder
         var cache = Substitute.For<ICache>();
         return cache;
     }
+    
+    private static IEventBus GenerateMockEventBus()
+    {
+        var eventBus = Substitute.For<IEventBus>();
+        eventBus.PublishAsync(Arg.Any<ProductEvent>()).Returns(Task.CompletedTask);
+        return eventBus;
+    }
 
     private static List<Product> GenerateMockDomainProductList(int count)
     {
         return Fixture.Build<Product>()
             .Without(s => s.ProductImages)
+            .Without(s => s.ProductStocks)
+            .Without(s => s.ProductCategory)
             .With(s => s.LastUpdateDate, () => DateTime.Now)
             .With(s => s.LastUpdateUserId, () => "Test")
             .CreateMany(count)
@@ -67,6 +79,8 @@ public static class ProductMockBuilder
             .With(s => s.LastUpdateDate, () => DateTime.Now)
             .With(s => s.LastUpdateUserId, () => "Test")
             .Without(s => s.ProductImages)
+            .Without(s => s.ProductStocks)
+            .Without(s => s.ProductCategory)
             .Create();
     }
 
@@ -82,19 +96,19 @@ public static class ProductMockBuilder
         if (typeof(T) == typeof(UpdateProductHandler))
         {
             return new UpdateProductHandler(NullLogger<UpdateProductHandler>.Instance,
-                GenerateMockRepository(catalog));
+                GenerateMockRepository(catalog), GenerateMockObjectCache(), GenerateMockEventBus());
         }
         
         if (typeof(T) == typeof(SoftDeleteProductHandler))
         {
             return new SoftDeleteProductHandler(NullLogger<SoftDeleteProductHandler>.Instance,
-                GenerateMockRepository(catalog));
+                GenerateMockRepository(catalog), GenerateMockObjectCache(), GenerateMockEventBus());
         }
         
         if (typeof(T) == typeof(DeleteProductHandler))
         {
             return new DeleteProductHandler(NullLogger<DeleteProductHandler>.Instance,
-                GenerateMockRepository(catalog));
+                GenerateMockRepository(catalog), GenerateMockObjectCache(), GenerateMockEventBus());
         }
         
         if (typeof(T) == typeof(CreateProductHandler))
@@ -103,7 +117,7 @@ public static class ProductMockBuilder
             repository.GetAsSingleAsync(Arg.Any<Expression<Func<Product, bool>>>(), Arg.Any<Expression<Func<Product, string>>>(), 
                 Arg.Any<Expression<Func<Product, string>>>(), Arg.Any<Expression<Func<Product, Product>>>(), Arg.Any<bool>()).Returns((Product)null);
             return new CreateProductHandler(NullLogger<CreateProductHandler>.Instance,
-                repository);
+                repository, GenerateMockObjectCache(), GenerateMockEventBus());
         }
         
         if (typeof(T) == typeof(GetAllProductsHandler))

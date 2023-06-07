@@ -1,8 +1,8 @@
 using System.Net;
 using System.Threading.Tasks;
 using CatalogService.API.Outputs.Base;
-using CatalogService.Message.Contracts.ProductStock.v1;
-using CatalogService.Message.Contracts.ProductStock.v1.Requests;
+using CatalogService.Application.ProductStock.Requests;
+using CatalogService.Application.ProductStock.Responses;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Functions.Worker.Http;
@@ -23,7 +23,7 @@ public class ProductStockOutput : OutputBase
     {
         var result = await _mediator.Send(new GetAllProductStock
         {
-            ProductStockId = productImageId
+            ProductId = productImageId
         });
         return await TransformToOutputAsync(result, HttpStatusCode.OK, httpRequestData) as T;
     }

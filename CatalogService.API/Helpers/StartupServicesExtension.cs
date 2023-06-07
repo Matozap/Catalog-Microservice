@@ -3,17 +3,17 @@ using System.IO.Compression;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Bustr;
+using CatalogService.API.Endpoints.Consumers.Self;
+using CatalogService.API.Endpoints.Grpc;
 using CatalogService.API.Helpers.Configuration;
 using CatalogService.API.Helpers.Middleware;
-using CatalogService.API.Inputs.Consumers.Self;
 using DistributedCache.Core;
-using CatalogService.API.Inputs.Grpc;
 using CatalogService.Application;
+using CatalogService.Application.ProductCategories.Events;
+using CatalogService.Application.ProductImages.Events;
+using CatalogService.Application.Products.Events;
+using CatalogService.Application.ProductStock.Events;
 using CatalogService.Infrastructure;
-using CatalogService.Message.Events.ProductCategories.v1;
-using CatalogService.Message.Events.ProductImages.v1;
-using CatalogService.Message.Events.Products.v1;
-using CatalogService.Message.Events.ProductStock.v1;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.ResponseCompression;
@@ -99,8 +99,10 @@ public static class StartupServicesExtension
                     .MapTopic("catalog/product-category-event", typeof(ProductCategoryEvent), typeof(ProductCategoryEventConsumer), "self.product.category.catalog.sub")
                     .MapTopic("catalog/product-event", typeof(ProductEvent), typeof(ProductEventConsumer), "self.product.catalog.sub")
                     .MapTopic("catalog/product-image-event", typeof(ProductImageEvent), typeof(ProductImageEventConsumer), "self.product.image.catalog.sub")
-                    .MapTopic("catalog/product-stock-event", typeof(ProductStockEvent), typeof(ProductStockEventConsumer), "self.product.stock.catalog.sub");
-            });;
+                    .MapTopic("catalog/product-stock-event", typeof(ProductStockEvent), typeof(ProductStockEventConsumer), "self.product.stock.catalog.sub")
+                    .MapTopic("catalog/product-stock-book-event", typeof(ProductStockBookEvent))
+                    .MapTopic("catalog/product-stock-release-event", typeof(ProductStockReleaseEvent));
+            });
     }
     
     public static void AddHostMiddleware(this WebApplication app, IWebHostEnvironment environment, IConfiguration configuration)

@@ -1,8 +1,8 @@
 using System.Net;
 using System.Threading.Tasks;
 using CatalogService.API.Outputs.Base;
-using CatalogService.Message.Contracts.ProductCategories.v1;
-using CatalogService.Message.Contracts.ProductCategories.v1.Requests;
+using CatalogService.Application.ProductCategories.Requests;
+using CatalogService.Application.ProductCategories.Responses;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Functions.Worker.Http;

@@ -1,8 +1,8 @@
 using System.Threading;
 using System.Threading.Tasks;
+using CatalogService.Application.ProductStock.Queries;
+using CatalogService.Application.ProductStock.Requests;
 using FluentAssertions;
-using CatalogService.Application.Handlers.ProductStock.v1.Queries;
-using CatalogService.Message.Contracts.ProductStock.v1.Requests;
 using CatalogService.Test.MockBuilder;
 using Xunit;
 
@@ -15,7 +15,7 @@ public class GetAllProductStockTests
     {
         var classToHandle = new GetAllProductStock
         {
-            ProductStockId = "1"
+            ProductId = "1"
         };
         
         var handler = (GetAllProductStockHandler)ProductStockMockBuilder.CreateHandler<GetAllProductStockHandler>();
