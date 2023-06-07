@@ -3,10 +3,10 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using CatalogService.Application.ProductStock.Commands;
+using CatalogService.Application.ProductStock.Requests;
+using CatalogService.Application.ProductStock.Responses;
 using FluentAssertions;
-using CatalogService.Application.Handlers.ProductStock.v1.Commands;
-using CatalogService.Message.Contracts.ProductStock.v1;
-using CatalogService.Message.Contracts.ProductStock.v1.Requests;
 using CatalogService.Test.MockBuilder;
 using Xunit;
 

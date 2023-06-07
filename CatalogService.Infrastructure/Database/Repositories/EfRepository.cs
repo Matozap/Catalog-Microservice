@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using CatalogService.Application.Interfaces;
+using CatalogService.Application.Common.Interfaces;
 using CatalogService.Domain;
 using CatalogService.Infrastructure.Database.Context;
 using CatalogService.Infrastructure.Extensions;

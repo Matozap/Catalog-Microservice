@@ -7,23 +7,17 @@
 
   <ItemGroup>
     <PackageReference Include="Bustr" Version="7.0.1" />
-    <PackageReference Include="DistributedCache" Version="1.3.5" />
+    <PackageReference Include="DistributedCache" Version="7.0.3" />
     <PackageReference Include="Mapster" Version="7.3.0" />
-    <PackageReference Include="MediatR" Version="12.0.1" />
+    <PackageReference Include="Mediatr.Patterns.Builder" Version="7.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="5.0.17" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.0" />
+    <PackageReference Include="protobuf-net.Grpc" Version="1.1.1" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\CatalogService.Domain\CatalogService.Domain.csproj" />
-    <ProjectReference Include="..\CatalogService.Message\CatalogService.Message.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Events\Subscriptions\" />
-    <Folder Include="Handlers\Products\v1" />
-    <Folder Include="Handlers\ProductImages\v1" />
   </ItemGroup>
 
 </Project>

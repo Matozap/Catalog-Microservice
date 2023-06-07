@@ -1,9 +1,11 @@
 using System.Reflection;
-using CatalogService.Application.Interfaces;
+using CatalogService.Application.Common;
+using CatalogService.Application.Common.Interfaces;
 using CatalogService.Infrastructure.Database.Context;
 using CatalogService.Infrastructure.Database.Repositories;
 using CatalogService.Infrastructure.Extensions;
 using MapsterMapper;
+using MediatrBuilder;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Azure.Cosmos;
@@ -21,8 +23,9 @@ public static class DependencyInjection
         configuration.GetSection("Database").Bind(databaseOptions);
 
         services.AddDataContext(databaseOptions)
-            .AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(Assembly.GetExecutingAssembly(), 
-                typeof(DependencyInjection).Assembly, typeof(Application.DependencyInjection).Assembly, typeof(IMapper).Assembly))
+            .AddMediatrBuilder(cfg => cfg.RegisterServicesFromAssemblies(Assembly.GetExecutingAssembly(), 
+                    typeof(DependencyInjection).Assembly, typeof(Application.DependencyInjection).Assembly, typeof(StringWrapper).Assembly, typeof(IMapper).Assembly)
+                .AddFluentValidation(true))
             .EnsureDatabaseIsSeeded();
 
         return services;

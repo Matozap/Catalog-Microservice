@@ -1,9 +1,9 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using CatalogService.Application.Products.Queries;
+using CatalogService.Application.Products.Requests;
 using FluentAssertions;
-using CatalogService.Application.Handlers.Products.v1.Queries;
-using CatalogService.Message.Contracts.Products.v1.Requests;
 using CatalogService.Test.MockBuilder;
 using Xunit;
 
