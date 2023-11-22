@@ -2,7 +2,7 @@
 using System.Configuration;
 using System.IO;
 using Bustr.Bus;
-using DistributedCache.Core.Configuration;
+using Distributed.Cache.Core.Configuration;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 

@@ -4,7 +4,7 @@ using CatalogService.Application.Common.Interfaces;
 using CatalogService.Application.ProductCategories.Requests;
 using CatalogService.Application.ProductCategories.Responses;
 using CatalogService.Domain;
-using DistributedCache.Core;
+using Distributed.Cache.Core;
 using Mapster;
 using MediatrBuilder;
 using Microsoft.Extensions.Logging;
