@@ -8,7 +8,7 @@ using CatalogService.Application.Products.Events;
 using CatalogService.Application.Products.Requests;
 using CatalogService.Application.Products.Responses;
 using CatalogService.Domain;
-using DistributedCache.Core;
+using Distributed.Cache.Core;
 using Mapster;
 using MediatrBuilder;
 using Microsoft.Extensions.Logging;

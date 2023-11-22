@@ -6,10 +6,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Bustr" Version="7.0.1" />
-    <PackageReference Include="DistributedCache" Version="7.0.3" />
+    <PackageReference Include="Bustr" Version="8.0.0" />
+    <PackageReference Include="DistributedCache" Version="8.0.0" />
     <PackageReference Include="Mapster" Version="7.4.0" />
-    <PackageReference Include="Mediatr.Patterns.Builder" Version="7.0.1" />
+    <PackageReference Include="Mediatr.Patterns.Builder" Version="8.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="5.0.17" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.0" />

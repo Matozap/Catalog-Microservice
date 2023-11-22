@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using CatalogService.Application.Common.Interfaces;
 using CatalogService.Application.ProductStock.Requests;
 using CatalogService.Application.ProductStock.Responses;
-using DistributedCache.Core;
+using Distributed.Cache.Core;
 using Mapster;
 using MediatrBuilder;
 using Microsoft.Extensions.Logging;
